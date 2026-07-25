@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MOLECULE — 5-minute demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B1020;--slab:#131C33;--slab2:#0F1729;--slab3:#0C1426;--edge:#22304F;--edge2:#2E4470;
+  --foil:#9FB0CE;--foil-dim:#69799A;--paper:#EEF3FB;--mag:#E20177;--mag-soft:#FF4FA8;--cobalt:#3D7BEF;
+  --amber:#F2A93B;--mint:#35C4A0;--rose:#FF4F6B;
+  --disp:'Archivo',Arial,sans-serif;--body:'IBM Plex Sans',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:
+  radial-gradient(1100px 640px at 82% -8%,rgba(226,1,119,.10),transparent 60%),
+  radial-gradient(820px 560px at 3% 102%,rgba(61,123,239,.10),transparent 60%),var(--ink);
+  color:var(--paper);font-family:var(--body);font-size:14px;-webkit-font-smoothing:antialiased;min-height:100vh}
+h1,h2,h3,h4{margin:0;font-family:var(--disp);font-weight:900;letter-spacing:-.01em}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--foil-dim)}
+.up{color:var(--mint)}.down{color:var(--rose)}.warn{color:var(--amber)}.muted{color:var(--foil-dim)}
+.hidden{display:none!important}
+.btn{background:var(--slab);border:1px solid var(--edge);border-radius:5px;padding:10px 15px;cursor:pointer;color:var(--paper);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;transition:.15s;min-height:40px}
+.btn:hover{border-color:var(--mag);color:#fff}.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.primary{background:var(--mag);border-color:var(--mag);color:#fff;font-weight:600}
+.btn.primary:hover{background:#FF3391;border-color:#FF3391}
+.btn.lg{padding:14px 24px;font-size:12px}
+.btn.full{width:100%;display:flex;justify-content:center;align-items:center;gap:8px}
+
+/* appbar */
+.appbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;padding:11px 16px;
+  background:rgba(11,16,32,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--edge)}
+.wm{font-family:var(--disp);font-weight:900;font-size:17px;letter-spacing:-.02em}
+.wm .dot{color:var(--mag)}
+.demoTag{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mag-soft);
+  border:1px solid rgba(226,1,119,.4);border-radius:20px;padding:3px 9px;background:rgba(226,1,119,.08)}
+.sp{flex:1}
+.timer{font-family:var(--mono);font-weight:600;font-size:19px;letter-spacing:.02em;padding:5px 12px;border:1px solid var(--edge);border-radius:6px;background:var(--slab3)}
+.timer.warn{color:var(--amber);border-color:rgba(242,169,59,.5)}
+.timer.crit{color:var(--rose);border-color:rgba(255,79,107,.6);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.5}}
+
+.wrap{max-width:1080px;margin:0 auto;padding:14px 16px 150px}
+.statstrip{display:flex;gap:1px;background:var(--edge);border:1px solid var(--edge);border-radius:6px;overflow:hidden}
+.statcell{background:var(--slab2);padding:10px 14px;flex:1}
+.statcell .k{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--foil-dim)}
+.statcell .v{font-family:var(--mono);font-size:17px;font-weight:600;margin-top:3px}
+.grid{display:grid;grid-template-columns:1fr 300px;gap:14px;margin-top:14px;align-items:start}
+@media(max-width:820px){.grid{grid-template-columns:1fr}.feedCard{max-height:200px}}
+
+.card{background:var(--slab);border:1px solid var(--edge);border-radius:7px;padding:15px;margin-bottom:13px}
+.card.hi{border-color:#3B2B4D;background:linear-gradient(180deg,#161B33,#0F1729)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.title-l{font-family:var(--disp);font-weight:900;font-size:18px}
+.chip{display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:3px;border:1px solid var(--edge);color:var(--foil)}
+.chip.mag{border-color:rgba(226,1,119,.5);color:var(--mag-soft);background:rgba(226,1,119,.08)}
+.chip.mint{border-color:rgba(53,196,160,.5);color:var(--mint);background:rgba(53,196,160,.08)}
+.chip.amber{border-color:rgba(242,169,59,.5);color:var(--amber);background:rgba(242,169,59,.08)}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:8px;margin-top:11px}
+.metric{background:var(--slab3);border:1px solid var(--edge);border-radius:5px;padding:8px 9px}
+.metric .k{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--foil-dim)}
+.metric .v{font-family:var(--mono);font-size:14px;font-weight:600;margin-top:2px}
+.slider-row{display:grid;grid-template-columns:1fr 92px;gap:12px;align-items:center;margin:11px 0}
+.slider-row .lab{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--foil-dim)}
+.slider-row .val{font-family:var(--mono);font-size:13px;text-align:right;font-weight:600}
+input[type=range]{width:100%;accent-color:var(--mag);height:26px}
+.meter{height:6px;background:#0A1121;border:1px solid var(--edge);border-radius:4px;overflow:hidden;margin-top:6px}
+.meter i{display:block;height:100%;background:var(--cobalt)}
+.meter.m i{background:var(--mag)}.meter.g i{background:var(--mint)}
+.drv{margin:8px 0}
+.drv .r{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--foil-dim)}
+
+/* blister */
+.blister{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;background:linear-gradient(180deg,#C9D4E6,#94A4BE 42%,#B8C4D9 43%,#7D8DA9);padding:7px;border-radius:4px;position:relative;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -1px 0 rgba(0,0,0,.35);margin-top:10px}
+.blister::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(115deg,rgba(255,255,255,.16) 0 2px,transparent 2px 7px);border-radius:4px}
+.pocket{position:relative;height:46px;border-radius:3px;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 32% 26%,rgba(255,255,255,.85),rgba(120,135,160,.25) 62%,rgba(60,70,90,.35));box-shadow:inset 0 0 0 1px rgba(255,255,255,.45),inset 0 4px 8px rgba(0,0,0,.18);overflow:hidden}
+.pocket .plab{position:absolute;bottom:2px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:6.5px;letter-spacing:.03em;color:#39445A;text-transform:uppercase}
+.cap{width:13px;height:28px;border-radius:7px;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.4);transform:rotate(-14deg)}
+.cap i{position:absolute;left:0;right:0;height:50%}.cap i:first-child{top:0;background:var(--mag)}.cap i:last-child{bottom:0;background:#F4F7FC}
+.pocket.done .cap i:first-child{background:var(--mint)}.pocket.done .cap i:last-child{background:#DFF6EE}
+.pocket.active{box-shadow:inset 0 0 0 1.5px var(--mag),inset 0 4px 8px rgba(0,0,0,.18)}
+.pocket.empty .cap{opacity:.16;filter:grayscale(1)}
+.pocket.failed{background:linear-gradient(135deg,#8D94A6,#5C6478);filter:grayscale(.6)}
+.fillbar{position:absolute;left:0;bottom:0;width:100%;background:rgba(226,1,119,.22)}
+
+.feedCard{max-height:60vh;overflow-y:auto}
+.ev{display:grid;grid-template-columns:38px 1fr;gap:8px;padding:8px 2px;border-bottom:1px solid rgba(34,48,79,.5)}
+.ev .m{font-family:var(--mono);font-size:9px;color:var(--foil-dim)}
+.ev .t{font-size:12px;line-height:1.4;color:#CBD6EA}
+.ev b{color:#fff}.ev.good{border-left:2px solid var(--mint);padding-left:6px}.ev.bad{border-left:2px solid var(--rose);padding-left:6px}.ev.warnl{border-left:2px solid var(--amber);padding-left:6px}
+
+/* command bar */
+.cmd{position:fixed;left:0;right:0;bottom:0;background:rgba(11,16,32,.95);backdrop-filter:blur(9px);border-top:1px solid var(--edge);padding:11px 16px calc(11px + var(--safe-b));z-index:25}
+.cmd-in{max-width:1080px;margin:0 auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.cmd .note{font-family:var(--mono);font-size:10px;color:var(--foil-dim);letter-spacing:.03em}
+
+/* overlays */
+.scrim{position:fixed;inset:0;background:rgba(4,7,16,.86);display:flex;align-items:center;justify-content:center;padding:18px;z-index:60}
+.modal{background:var(--slab);border:1px solid var(--edge);border-radius:9px;max-width:560px;width:100%;max-height:92vh;overflow-y:auto}
+.modal .mh{padding:18px 20px;border-bottom:1px solid var(--edge)}
+.modal .mb{padding:20px}
+.modal .mf{padding:15px 20px calc(15px + var(--safe-b));border-top:1px solid var(--edge);display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.opt{width:100%;text-align:left;background:var(--slab3);border:1px solid var(--edge);border-radius:6px;padding:13px;cursor:pointer;margin-bottom:9px;transition:.15s;color:var(--paper)}
+.opt:hover{border-color:var(--mag);background:#111A2F}
+.opt .ot{font-family:var(--disp);font-weight:700;font-size:14px;margin-bottom:3px}
+.opt .od{font-size:12.5px;color:var(--foil);line-height:1.45}
+.area-pick{display:grid;gap:10px;margin:16px 0}
+.area{text-align:left;background:var(--slab3);border:1px solid var(--edge);border-radius:7px;padding:14px;cursor:pointer;transition:.15s;color:var(--paper)}
+.area:hover,.area[aria-pressed="true"]{border-color:var(--mag);background:#121B31}
+.area .an{font-family:var(--disp);font-weight:800;font-size:15px}
+.area .ad{font-size:12px;color:var(--foil);margin-top:3px}
+.hero-mark{font-family:var(--disp);font-weight:900;font-size:34px;letter-spacing:-.03em;text-align:center}
+.hero-mark .dot{color:var(--mag)}
+.end-grade{font-family:var(--disp);font-weight:900;font-size:26px;text-align:center;margin-bottom:6px}
+.sell{border:1px solid var(--edge2);border-radius:8px;background:linear-gradient(180deg,#161B33,#0F1729);padding:16px;margin-top:16px}
+.sell ul{margin:8px 0 0;padding-left:18px}.sell li{font-size:13px;color:var(--foil);margin-bottom:4px}
+.price-tag{font-family:var(--disp);font-weight:900;font-size:30px}.price-tag .c{color:var(--mag-soft);font-size:17px;vertical-align:super}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="appbar">
+  <div class="wm">MOLECULE<span class="dot">.</span></div>
+  <span class="demoTag">5-min demo</span>
+  <div class="sp"></div>
+  <div class="timer mono" id="timer">5:00</div>
+</div>
+
+<div class="wrap" id="game">
+  <div class="statstrip" id="statstrip"></div>
+  <div class="grid">
+    <main id="stage"></main>
+    <aside class="card feedCard"><div class="eyebrow" style="margin-bottom:8px">Month feed</div><div id="feed"></div></aside>
+  </div>
+</div>
+
+<div class="cmd" id="cmdbar">
+  <div class="cmd-in">
+    <button class="btn primary lg" id="btnAdvance">Advance month ▸</button>
+    <span class="note" id="burn"></span>
+    <span class="sp"></span>
+    <button class="btn" id="btnBuy">Get the full game · $11</button>
+  </div>
+</div>
+
+<div class="scrim" id="scrim">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+"use strict";
+/* ============ CONFIG ============ */
+var DEMO_SECONDS = 300;                 // 5-minute demo tier
+var CONTACT_EMAIL = "contacto.luisvillanueva@gmail.com";
+var BUY_URL = "";                        // paste your landing-page URL here; blank = email fallback
+
+/* ============ DOMAIN (reduced) ============ */
+var AREAS = {
+  cardio:{name:"Cardiometabolic",pop:2600000,refPrice:58,elasticity:1.55,comp:0.9,cogs:.17,
+    note:"Huge patient volume, generic-anchored price. Won on access and reach."},
+  onco:{name:"Oncology",pop:42000,refPrice:9200,elasticity:0.52,comp:0.64,cogs:.27,
+    note:"Tiny population, price-insensitive, evidence-hungry. Credibility beats promotion."},
+  rare:{name:"Rare disease",pop:5200,refPrice:24000,elasticity:0.34,comp:0.30,cogs:.34,
+    note:"A handful of patients, orphan pricing, almost no competition — a payer fight per patient."}
+};
+var PHASES=[["Discovery",2],["Phase I",2],["Phase II",3],["Phase III",3],["Review",2]];
+var STEM=["Vel","Zan","Cor","Lyra","Nex","Orav","Ryn","Kiva","Elu","Bre","Solu","Ven","Trev"];
+var SUF={cardio:["sartan","statin","pril","dipine"],onco:["tinib","ciclib","parib","zomib"],rare:["gene","sen","ridase","glucase"]};
+
+/* ============ STATE ============ */
+var G=null, TAB="brands", timer=null, timeLeft=DEMO_SECONDS, running=false, paused=false, area="onco";
+function rnd(){return Math.random();}
+function ri(a,b){return a+Math.floor(rnd()*(b-a+1));}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function uid(){return Math.random().toString(36).slice(2,8);}
+function brandName(a){var n=STEM[ri(0,STEM.length-1)]+SUF[a][ri(0,SUF[a].length-1)];return n[0].toUpperCase()+n.slice(1);}
+function money(v){var s=v<0?"-":"";v=Math.abs(v);if(v>=1e9)return s+"$"+(v/1e9).toFixed(2)+"B";if(v>=1e6)return s+"$"+(v/1e6).toFixed(1)+"M";if(v>=1e3)return s+"$"+(v/1e3).toFixed(0)+"K";return s+"$"+Math.round(v);}
+function pct(v){return (v*100).toFixed(1)+"%";}
+var MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function dateOf(m){return MONTHS[m%12]+" "+(2027+Math.floor(m/12));}
+function $(s){return document.querySelector(s);}
+function log(kind,text){G.log.unshift({m:G.month,kind:kind,text:text});if(G.log.length>60)G.log.pop();}
+
+function newGame(a){
+  area=a;
+  G={area:a,month:0,cash:120e6,brands:[],programs:[],log:[],last:null,ended:false};
+  // starter approved brand — launch instantly available
+  var ap={id:uid(),name:brandName(a),area:a,approved:true};
+  G.programs.push(ap);
+  // one asset near approval (Phase III) so a 2nd launch happens mid-demo
+  var p2={id:uid(),name:brandName(a),area:a,phase:3,progress:0,dead:false};
+  G.programs.push(p2);
+  log("info","<b>"+dateOf(0)+"</b> — you founded a company in "+AREAS[a].name+". Launch your first brand to start earning.");
+}
+function launch(prog, price){
+  var a=AREAS[prog.area];
+  var b={id:prog.id,name:prog.name,area:prog.area,priceMult:price,launched:G.month,
+    awareness:0.05,access:0.10,promo:Math.round(1.4e6),accessSpend:Math.round(1.2e6),
+    revLTM:[],lifetime:0,patients:0};
+  G.brands.push(b);
+  G.programs=G.programs.filter(function(x){return x.id!==prog.id;});
+  log("good","<b>"+b.name+"</b> launched at $"+Math.round(a.refPrice*price).toLocaleString()+"/patient·mo.");
+}
+function brandMonth(b, apply){
+  var a=AREAS[b.area], age=G.month-b.launched;
+  var A=b.awareness, C=b.access;
+  if(apply){
+    A=A*0.94+(1-A*0.94)*(1-Math.exp(-b.promo/2.4e6));
+    var pricePenalty=clamp((b.priceMult-1)*0.22,0,0.4);
+    C=C*0.98+(1-C*0.98)*((1-Math.exp(-b.accessSpend/2.2e6))*(1-pricePenalty));
+    b.awareness=A; b.access=C;
+  }
+  var quality=0.80;
+  var mix=0.55*A+0.45*C;
+  var priceEffect=Math.pow(1/Math.max(0.4,b.priceMult),a.elasticity);
+  var attract=quality*mix*priceEffect;
+  var share=attract/(attract+a.comp);
+  var pen=clamp(0.30+age*0.006,0.25,0.72);
+  var demand=a.pop*pen*share;
+  var realPrice=a.refPrice*b.priceMult;
+  var gross=demand*realPrice;
+  var g2n=clamp(0.10+0.25*C,0.08,0.40);
+  var net=gross*(1-g2n);
+  var cogs=net*a.cogs;
+  return {share:share,demand:demand,net:net,cogs:cogs,g2n:g2n,realPrice:realPrice,A:A,C:C};
+}
+function evNPV(){
+  var v=G.cash;
+  G.brands.forEach(function(b){var r=brandMonth(b,false);v+=r.net*12*2.3 - r.cogs*12*1.1;});
+  G.programs.forEach(function(p){if(p.approved)v+=6e6; else if(!p.dead)v+=[0,2e6,5e6,11e6,20e6][p.phase]||0;});
+  return v;
+}
+
+/* ============ MONTH TICK ============ */
+function tick(){
+  if(G.ended) return;
+  var M={net:0,cogs:0,promo:0,access:0};
+  // pipeline
+  G.programs.forEach(function(p){
+    if(p.approved||p.dead) return;
+    p.progress++;
+    if(p.progress>=PHASES[p.phase][1]){
+      p.progress=0;
+      var pSucc=[0.85,0.80,0.70,0.78,0.90][p.phase];
+      if(rnd()<pSucc){
+        if(p.phase===4){p.approved=true;log("good","<b>"+p.name+"</b> approved — ready to launch.");}
+        else {p.phase++;log("good","<b>"+p.name+"</b> cleared "+PHASES[p.phase-1][0]+" → "+PHASES[p.phase][0]+".");}
+      } else {p.dead=true;log("bad","<b>"+p.name+"</b> failed in "+PHASES[p.phase][0]+".");}
+    }
+  });
+  // brands
+  G.brands.forEach(function(b){
+    var r=brandMonth(b,true);
+    b.patients=r.demand; b.lifetime+=r.net; b.revLTM.push(r.net); if(b.revLTM.length>12)b.revLTM.shift();
+    M.net+=r.net; M.cogs+=r.cogs; M.promo+=b.promo; M.access+=b.accessSpend;
+  });
+  var overhead=1.2e6+G.brands.length*0.4e6;
+  var spend=M.cogs+M.promo+M.access+overhead;
+  var profit=M.net-spend;
+  G.cash+=profit;
+  G.last={net:M.net,profit:profit,spend:spend};
+  G.month++;
+  // light event ~28%
+  if(rnd()<0.28) rollEvent();
+}
+function rollEvent(){
+  var brands=G.brands;
+  var pool=[];
+  if(brands.length){
+    pool.push(function(){var b=brands[ri(0,brands.length-1)];
+      openDecision("Market access","A lead payer on "+b.name+" wants a deeper rebate for a preferred tier.",
+        [["Accept — more access, lower net price",function(){b.access=clamp(b.access+0.16,0,1);b.priceMult=Math.max(0.5,b.priceMult*0.92);log("warnl","Rebate accepted on "+b.name+".");}],
+         ["Hold price, lose the tier",function(){b.access=clamp(b.access-0.12,0,1);log("info","Price held on "+b.name+".");}]]);});
+    pool.push(function(){var b=brands[ri(0,brands.length-1)];
+      openDecision("Congress","Your "+b.name+" data landed well at a major congress.",
+        [["Ride the momentum (free)",function(){b.awareness=clamp(b.awareness+0.12,0,1);log("good","Prescriber awareness for "+b.name+" jumped.");}]]);});
+  }
+  pool.push(function(){openDecision("Business development","A biotech offers a marketed brand in "+AREAS[G.area].name+" for "+money(60e6)+".",
+    [["Acquire & launch — "+money(60e6),function(){if(G.cash<60e6){log("warnl","Not enough cash to acquire.");return;}G.cash-=60e6;var pr={id:uid(),name:brandName(G.area),area:G.area,approved:true};launch(pr,1.0);log("good","Acquired and launched a new brand.");}],
+     ["Pass",function(){log("info","Passed on the deal.");}]]);});
+  if(pool.length) pool[ri(0,pool.length-1)]();
+}
+
+/* ============ UI ============ */
+function render(){
+  if(!G) return;
+  var lm=G.last;
+  var ltm=G.brands.reduce(function(s,b){return s+b.revLTM.reduce(function(a,c){return a+c;},0);},0);
+  var cells=[["Cash",money(G.cash),G.cash<15e6?"down":""],
+    ["Net / mo",lm?money(lm.profit):"—",lm?(lm.profit>=0?"up":"down"):""],
+    ["Revenue LTM",money(ltm),""],
+    ["Enterprise value",money(evNPV()),""],
+    ["Month",(G.month+1)+" · "+dateOf(G.month),""]];
+  $("#statstrip").innerHTML=cells.map(function(c){return "<div class='statcell'><div class='k'>"+c[0]+"</div><div class='v "+c[2]+"'>"+c[1]+"</div></div>";}).join("");
+  $("#burn").innerHTML=lm?("Last month · net rev <b class='mono'>"+money(lm.net)+"</b> · spend <b class='mono'>"+money(lm.spend)+"</b>"):"Launch a brand, then advance the month.";
+  renderStage(); renderFeed();
+}
+function renderFeed(){
+  $("#feed").innerHTML=G.log.length?G.log.map(function(e){return "<div class='ev "+e.kind+"'><div class='m'>M"+String(e.m+1).padStart(2,"0")+"</div><div class='t'>"+e.text+"</div></div>";}).join(""):"<div class='muted' style='font-size:12px'>Nothing yet.</div>";
+}
+function renderStage(){
+  var s=$("#stage"), h="";
+  // brands
+  if(!G.brands.length){
+    h+="<div class='card'><div class='muted' style='text-align:center;padding:20px'>No brand in market yet. Launch your approved asset below to start earning.</div></div>";
+  }
+  G.brands.forEach(function(b){
+    var a=AREAS[b.area], r=brandMonth(b,false);
+    h+="<div class='card hi'><div class='row'><div><div class='title-l'>"+b.name+"</div><div class='muted' style='font-size:12px'>"+a.name+" · launched "+dateOf(b.launched)+"</div></div><span class='chip mint'>Marketed</span></div>";
+    h+="<div class='metrics'>"+
+      "<div class='metric'><div class='k'>Net rev/mo</div><div class='v'>"+money(r.net)+"</div></div>"+
+      "<div class='metric'><div class='k'>Patients</div><div class='v'>"+Math.round(r.demand).toLocaleString()+"</div></div>"+
+      "<div class='metric'><div class='k'>Share</div><div class='v'>"+pct(r.share)+"</div></div>"+
+      "<div class='metric'><div class='k'>Net price</div><div class='v'>$"+Math.round(r.realPrice).toLocaleString()+"</div></div>"+
+      "<div class='metric'><div class='k'>Gross-to-net</div><div class='v'>-"+pct(r.g2n)+"</div></div>"+
+      "<div class='metric'><div class='k'>Lifetime</div><div class='v'>"+money(b.lifetime)+"</div></div></div>";
+    h+="<div class='drv'><div class='r'><span>Awareness</span><span>"+pct(r.A)+"</span></div><div class='meter m'><i style='width:"+(r.A*100).toFixed(0)+"%'></i></div></div>";
+    h+="<div class='drv'><div class='r'><span>Access</span><span>"+pct(r.C)+"</span></div><div class='meter g'><i style='width:"+(r.C*100).toFixed(0)+"%'></i></div></div>";
+    h+="<div class='slider-row'><div><div class='lab'>Price (× reference)</div><input type='range' data-b='"+b.id+"' data-f='priceMult' min='40' max='240' value='"+Math.round(b.priceMult*100)+"'></div><div class='val'>$"+Math.round(a.refPrice*b.priceMult).toLocaleString()+"</div></div>";
+    h+="<div class='slider-row'><div><div class='lab'>Promotion / mo</div><input type='range' data-b='"+b.id+"' data-f='promo' min='0' max='6000000' step='100000' value='"+b.promo+"'></div><div class='val'>"+money(b.promo)+"</div></div>";
+    h+="<div class='slider-row'><div><div class='lab'>Market access / mo</div><input type='range' data-b='"+b.id+"' data-f='accessSpend' min='0' max='6000000' step='100000' value='"+b.accessSpend+"'></div><div class='val'>"+money(b.accessSpend)+"</div></div>";
+    h+="</div>";
+  });
+  // pipeline
+  h+="<div class='card'><div class='row' style='margin-bottom:4px'><div class='eyebrow'>Pipeline</div><span class='muted' style='font-size:11px'>demo pipeline is short — assets move fast</span></div>";
+  var live=G.programs.filter(function(p){return !p.dead;});
+  if(!live.length) h+="<div class='muted' style='font-size:12px;padding:8px 0'>No active programs. In the full game you keep a deep pipeline running.</div>";
+  G.programs.forEach(function(p){
+    if(p.approved){
+      h+="<div style='padding:10px 0;border-top:1px solid rgba(34,48,79,.5)'><div class='row'><div><b>"+p.name+"</b> <span class='chip mint'>Approved</span><div class='muted' style='font-size:11px'>"+AREAS[p.area].name+"</div></div><button class='btn primary' data-launch='"+p.id+"'>Launch</button></div></div>";
+    } else if(!p.dead){
+      h+="<div style='padding:10px 0;border-top:1px solid rgba(34,48,79,.5)'><div class='row'><b>"+p.name+"</b> <span class='chip mag'>"+PHASES[p.phase][0]+"</span></div>";
+      h+="<div class='blister'>";
+      for(var i=0;i<5;i++){var cls="pocket";if(i<p.phase)cls+=" done";else if(i===p.phase)cls+=" active";else cls+=" empty";
+        var fill=(i===p.phase)?Math.round(p.progress/PHASES[i][1]*100):0;
+        h+="<div class='"+cls+"'>"+(fill?"<div class='fillbar' style='height:"+fill+"%'></div>":"")+"<div class='cap'><i></i><i></i></div><div class='plab'>"+PHASES[i][0]+"</div></div>";}
+      h+="</div></div>";
+    } else {
+      h+="<div style='padding:10px 0;border-top:1px solid rgba(34,48,79,.5)'><b class='muted' style='text-decoration:line-through'>"+p.name+"</b> <span class='chip'>Terminated</span></div>";
+    }
+  });
+  h+="</div>";
+  s.innerHTML=h;
+  // wire sliders
+  document.querySelectorAll("input[data-b]").forEach(function(inp){
+    inp.oninput=function(e){var b=G.brands.filter(function(x){return x.id===e.target.dataset.b;})[0];var f=e.target.dataset.f;
+      b[f]=(f==="priceMult")?(+e.target.value/100):(+e.target.value);
+      e.target.parentElement.nextElementSibling.textContent=(f==="priceMult")?("$"+Math.round(AREAS[b.area].refPrice*b.priceMult).toLocaleString()):money(+e.target.value);};
+    inp.onchange=function(){render();};
+  });
+  document.querySelectorAll("[data-launch]").forEach(function(btn){
+    btn.onclick=function(){var p=G.programs.filter(function(x){return x.id===btn.dataset.launch;})[0];openLaunch(p);};
+  });
+}
+
+/* ============ MODALS ============ */
+function showModal(html){ $("#modal").innerHTML=html; $("#scrim").classList.remove("hidden"); }
+function closeModal(){ $("#scrim").classList.add("hidden"); }
+function openDecision(kicker,body,options){
+  paused=true;
+  var h="<div class='mh'><div class='eyebrow'>"+kicker+"</div><h2 style='font-size:19px;margin-top:4px'>Decision</h2></div><div class='mb'><div style='font-size:13.5px;margin-bottom:14px'>"+body+"</div><div id='opts'></div></div>";
+  showModal(h);
+  var wrap=$("#opts");
+  options.forEach(function(o){var btn=document.createElement("button");btn.className="opt";btn.innerHTML="<div class='ot'>"+o[0]+"</div>";
+    btn.onclick=function(){o[1]();closeModal();paused=false;render();};wrap.appendChild(btn);});
+}
+function openLaunch(prog){
+  paused=true;
+  var a=AREAS[prog.area], price=1.0;
+  function draw(){
+    var est=(function(){var tmp={priceMult:price,awareness:0.35,access:0.35};var save=Object.assign({},tmp);
+      // rough mature estimate
+      var quality=0.8,mix=0.55*0.5+0.45*0.5,pe=Math.pow(1/Math.max(0.4,price),a.elasticity);
+      var attract=quality*mix*pe,share=attract/(attract+a.comp);return {share:share,patients:a.pop*0.55*share};})();
+    var h="<div class='mh'><div class='eyebrow'>Launch plan</div><h2 style='font-size:20px;margin-top:4px'>Launch "+prog.name+"</h2></div><div class='mb'>";
+    h+="<div style='font-size:13px;color:var(--foil);margin-bottom:14px'>Set your launch price. Higher price = more margin per patient but lower volume and harder access. (The full game also makes you build manufacturing capacity.)</div>";
+    h+="<div class='slider-row'><div><div class='lab'>Price (× reference)</div><input type='range' id='lp' min='40' max='240' value='"+Math.round(price*100)+"'></div><div class='val'>$"+Math.round(a.refPrice*price).toLocaleString()+"</div></div>";
+    h+="<div class='muted' style='font-size:12px'>Est. mature share ≈ "+pct(est.share)+" · volume response "+(Math.pow(1/price,a.elasticity)*100).toFixed(0)+"% of baseline</div>";
+    h+="</div><div class='mf'><button class='btn' id='lcancel'>Later</button><button class='btn primary' id='lgo'>Launch "+prog.name+"</button></div>";
+    showModal(h);
+    $("#lp").oninput=function(e){price=e.target.value/100;draw();};
+    $("#lcancel").onclick=function(){closeModal();paused=false;};
+    $("#lgo").onclick=function(){launch(prog,price);closeModal();paused=false;render();};
+  }
+  draw();
+}
+
+/* ============ TIMER + FLOW ============ */
+function fmt(s){var m=Math.floor(s/60),ss=s%60;return m+":"+String(ss).padStart(2,"0");}
+function updateTimer(){
+  var el=$("#timer"); el.textContent=fmt(timeLeft);
+  el.className="timer mono"+(timeLeft<=20?" crit":timeLeft<=60?" warn":"");
+}
+function startTimer(){
+  running=true;
+  timer=setInterval(function(){
+    if(paused||G.ended) return;
+    timeLeft--; updateTimer();
+    if(timeLeft<=0){ clearInterval(timer); endDemo(); }
+  },1000);
+}
+function endDemo(){
+  G.ended=true; paused=true;
+  var ev=evNPV();
+  var grade=ev>1.5e9?"Category contender":ev>600e6?"Strong start":ev>200e6?"Solid operator":"Getting started";
+  var buyBtn = BUY_URL ? "<a class='btn primary full lg' href='"+BUY_URL+"' target='_blank' rel='noopener'>Get the full game · $11</a>"
+    : "<a class='btn primary full lg' href='mailto:"+CONTACT_EMAIL+"?subject=New%20Molecule%20Licence%20Purchased&body=I%20want%20the%20full%20MOLECULE%20licence.%20My%20phone%3A%20'>Get the full game · $11</a>";
+  var h="<div class='mh'><div class='eyebrow'>Demo complete · 5 minutes</div><h2 style='font-size:22px;margin-top:4px'>Time's up</h2></div><div class='mb'>";
+  h+="<div class='end-grade'>"+grade+"</div>";
+  h+="<div class='metrics'>"+
+    "<div class='metric'><div class='k'>Enterprise value</div><div class='v'>"+money(ev)+"</div></div>"+
+    "<div class='metric'><div class='k'>Cash</div><div class='v'>"+money(G.cash)+"</div></div>"+
+    "<div class='metric'><div class='k'>Brands</div><div class='v'>"+G.brands.length+"</div></div>"+
+    "<div class='metric'><div class='k'>Months run</div><div class='v'>"+G.month+"</div></div></div>";
+  h+="<div class='sell'><div style='display:flex;align-items:baseline;justify-content:space-between'><div class='price-tag'><span class='c'>$</span>11</div><span class='chip mag'>one-time · full licence</span></div>";
+  h+="<div style='font-size:13px;color:var(--foil);margin-top:8px'>You just felt one slice of the loop. The full game adds:</div><ul>"+
+    "<li>8 therapeutic-area economies &amp; a full 10-year campaign</li>"+
+    "<li>Field force, competitors &amp; an industry leaderboard</li>"+
+    "<li>Go public — IPO, share price &amp; capital allocation</li>"+
+    "<li>Cloud saves, multiple companies &amp; a 10-case business mini-course</li></ul>";
+  h+="<div style='margin-top:14px'>"+buyBtn+"</div>";
+  h+="<div class='muted' style='font-size:11px;text-align:center;margin-top:8px'>Questions? "+CONTACT_EMAIL+"</div></div>";
+  h+="</div><div class='mf'><button class='btn' id='replay'>Replay demo</button></div>";
+  showModal(h);
+  $("#replay").onclick=function(){ closeModal(); startScreen(); };
+}
+
+/* ============ ADVANCE ============ */
+function advance(){
+  if(!G||G.ended||paused) return;
+  tick();
+  render();
+}
+
+/* ============ START SCREEN ============ */
+function startScreen(){
+  timeLeft=DEMO_SECONDS; running=false; paused=true; if(timer)clearInterval(timer); updateTimer();
+  var sel="onco";
+  function draw(){
+    var h="<div class='mh'><div class='hero-mark'>MOLECULE<span class='dot'>.</span></div><div class='eyebrow' style='text-align:center;margin-top:8px'>A pharma tycoon · 5-minute demo</div></div><div class='mb'>";
+    h+="<div style='font-size:13.5px;color:var(--foil);text-align:center;margin-bottom:6px'>Run a pharma company against a live 5-minute clock. Launch a brand, tune price, promotion and access, and grow your enterprise value before time runs out.</div>";
+    h+="<div class='area-pick'>";
+    Object.keys(AREAS).forEach(function(k){var a=AREAS[k];
+      h+="<button class='area' data-a='"+k+"' aria-pressed='"+(k===sel)+"'><div class='an'>"+a.name+"</div><div class='ad'>"+a.note+"</div></button>";});
+    h+="</div></div><div class='mf'><button class='btn primary full lg' id='start'>Start 5-minute demo ▸</button></div>";
+    showModal(h);
+    document.querySelectorAll(".area").forEach(function(b){b.onclick=function(){sel=b.dataset.a;draw();};});
+    $("#start").onclick=function(){ newGame(sel); paused=false; closeModal(); render(); startTimer(); };
+  }
+  draw();
+}
+
+/* ============ WIRING ============ */
+$("#btnAdvance").onclick=advance;
+$("#btnBuy").onclick=function(){
+  if(BUY_URL){ window.open(BUY_URL,"_blank","noopener"); }
+  else { window.location.href="mailto:"+CONTACT_EMAIL+"?subject=New%20Molecule%20Licence%20Purchased&body=I%20want%20the%20full%20MOLECULE%20licence.%20My%20phone%3A%20"; }
+};
+document.addEventListener("keydown",function(e){ if(e.key===" "||e.key==="Enter"){ if($("#scrim").classList.contains("hidden")){ e.preventDefault(); advance(); } } });
+
+startScreen();
+</script>
+</body>
+</html>
