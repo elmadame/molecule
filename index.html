@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MOLECULE — The official pharma-industry tycoon</title>
+<meta name="description" content="MOLECULE is the educative pharma tycoon game for brand managers, marketing directors and pharma CEOs. Ten calibrated business cases. One licence, $11.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B1020; --slab:#131C33; --slab2:#0F1729; --slab3:#0C1426;
+  --edge:#22304F; --edge2:#2E4470; --foil:#9FB0CE; --foil-dim:#69799A; --paper:#EEF3FB;
+  --mag:#E20177; --mag-soft:#FF4FA8; --cobalt:#3D7BEF; --cobalt-soft:#7FA9F7;
+  --amber:#F2A93B; --mint:#35C4A0; --rose:#FF4F6B;
+  --disp:'Archivo','Helvetica Neue',Arial,sans-serif; --body:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0;font-family:var(--disp);font-weight:900;letter-spacing:-.02em;line-height:1.02}
+p{margin:0 0 14px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--foil-dim)}
+.mag{color:var(--mag-soft)}.mint{color:var(--mint)}.muted{color:var(--foil-dim)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+/* sticky top */
+.top{position:fixed;top:0;left:0;right:0;z-index:40;border-bottom:1px solid transparent;transition:.25s}
+.top.solid{background:rgba(11,16,32,.9);backdrop-filter:blur(10px);border-bottom-color:var(--edge)}
+.top .in{max-width:1080px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
+.top .wm{font-family:var(--disp);font-weight:900;font-size:18px;letter-spacing:-.02em}
+.top .wm .dot{color:var(--mag)}
+.top .dots{display:flex;gap:7px;flex:1;justify-content:center}
+.top .dots a{width:8px;height:8px;border-radius:50%;background:var(--edge2);transition:.2s}
+.top .dots a.on{background:var(--mag);width:22px;border-radius:4px}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  border-radius:5px;padding:11px 18px;cursor:pointer;text-decoration:none;border:1px solid var(--edge);color:var(--paper);background:var(--slab);transition:.15s}
+.btn:hover{border-color:var(--mag)}
+.btn.primary{background:var(--mag);border-color:var(--mag);color:#fff;font-weight:600}
+.btn.primary:hover{background:#FF3391;border-color:#FF3391}
+.btn.lg{padding:15px 26px;font-size:12px}
+
+/* page sections */
+.page{min-height:100vh;display:flex;align-items:center;padding:104px 0 72px;position:relative;border-top:1px solid var(--edge)}
+#p1{border-top:0}
+.pagemark{position:absolute;top:104px;right:24px;font-family:var(--mono);font-size:11px;color:var(--foil-dim);letter-spacing:.2em}
+
+/* hero */
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center;width:100%}
+.tagpill{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--mag-soft);border:1px solid rgba(226,1,119,.4);border-radius:40px;padding:7px 14px;background:rgba(226,1,119,.07);margin-bottom:26px}
+.tagpill .rx{width:6px;height:6px;border-radius:50%;background:var(--mag)}
+h1.big{font-size:clamp(54px,8.5vw,110px);letter-spacing:-.045em;line-height:.9}
+h1.big .dot{color:var(--mag)}
+.hero-sub{font-family:var(--disp);font-weight:700;font-size:clamp(19px,2.6vw,27px);color:var(--foil);margin-top:18px;letter-spacing:-.01em;line-height:1.2}
+.hero-lede{color:var(--foil);font-size:17px;margin-top:20px;max-width:520px}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px;align-items:center}
+.hero-cta .note{font-size:13px;color:var(--foil-dim)}
+
+/* blister motif */
+.blister{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;
+  background:linear-gradient(180deg,#C9D4E6 0%,#94A4BE 42%,#B8C4D9 43%,#7D8DA9 100%);padding:11px;border-radius:5px;position:relative;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55), inset 0 -1px 0 rgba(0,0,0,.35), 0 22px 60px rgba(0,0,0,.5);transform:rotate(2deg)}
+.blister::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(115deg,rgba(255,255,255,.16) 0 2px,transparent 2px 9px);border-radius:5px}
+.pocket{position:relative;height:88px;border-radius:5px;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 32% 26%, rgba(255,255,255,.85), rgba(120,135,160,.25) 62%, rgba(60,70,90,.35));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.45), inset 0 5px 11px rgba(0,0,0,.18)}
+.pocket .plab{position:absolute;bottom:5px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:8px;letter-spacing:.05em;color:#39445A;text-transform:uppercase}
+.cap{width:22px;height:48px;border-radius:11px;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.4);transform:rotate(-14deg)}
+.cap i{position:absolute;left:0;right:0;height:50%}
+.cap i:first-child{top:0;background:var(--mag)}.cap i:last-child{bottom:0;background:#F4F7FC}
+.pocket.done .cap i:first-child{background:var(--mint)}.pocket.done .cap i:last-child{background:#DFF6EE}
+.pocket.active .cap{animation:bob 2.6s ease-in-out infinite}
+.pocket.active{box-shadow:inset 0 0 0 1.8px var(--mag), inset 0 5px 11px rgba(0,0,0,.18)}
+@keyframes bob{0%,100%{transform:rotate(-14deg) translateY(0)}50%{transform:rotate(-14deg) translateY(-4px)}}
+.hero-strip-cap{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--foil-dim);text-align:center;margin-top:16px}
+.trustline{display:flex;gap:22px;flex-wrap:wrap;margin-top:36px;padding-top:22px;border-top:1px solid var(--edge)}
+.trustline div{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--foil-dim)}
+.trustline b{color:var(--paper);font-weight:600}
+@media(max-width:820px){.hero-grid{grid-template-columns:1fr;gap:30px}.blister{max-width:420px}.pagemark{display:none}}
+</style>
+</head>
+<body>
+
+<div class="top" id="top"><div class="in">
+  <div class="wm">MOLECULE<span class="dot">.</span></div>
+  <div class="dots"><a href="#p1" class="on"></a><a href="#p2"></a><a href="#p3"></a></div>
+  <a href="#p3" class="btn primary">Get the licence · $11</a>
+</div></div>
+
+<!-- ============ PAGE 1 — HERO ============ -->
+<section class="page" id="p1"><div class="wrap"><span class="pagemark">01 / 03</span>
+  <div class="hero-grid">
+    <div>
+      <span class="tagpill"><span class="rx"></span>The official pharma-industry tycoon</span>
+      <h1 class="big">MOLECULE<span class="dot">.</span></h1>
+      <div class="hero-sub">The educative game where you run a pharma company for ten years — and every decision has a P&amp;L.</div>
+      <p class="hero-lede">Built for the people who actually make commercial calls: brand managers, marketing directors, and pharma CEOs. You don't read about gross-to-net, launch pricing, or loss of exclusivity — you live them, one month at a time, until the intuition is yours.</p>
+      <div class="hero-cta">
+        <a href="#p3" class="btn primary lg">Get the licence · $11</a>
+        <a href="#p2" class="btn lg">See what's inside</a>
+      </div>
+      <div class="hero-cta"><span class="note">One payment · lifetime licence · no install · runs in any browser</span></div>
+    </div>
+    <div>
+      <div class="blister">
+        <div class="pocket done"><div class="cap"><i></i><i></i></div><div class="plab">Discovery</div></div>
+        <div class="pocket done"><div class="cap"><i></i><i></i></div><div class="plab">Phase I</div></div>
+        <div class="pocket done"><div class="cap"><i></i><i></i></div><div class="plab">Phase II</div></div>
+        <div class="pocket active"><div class="cap"><i></i><i></i></div><div class="plab">Phase III</div></div>
+        <div class="pocket"><div class="cap"><i></i><i></i></div><div class="plab">Launch</div></div>
+      </div>
+      <div class="hero-strip-cap">Molecule → brand → market → the ten-year review</div>
+    </div>
+  </div>
+  <div class="trustline wrap" style="padding-left:0;padding-right:0;max-width:none">
+    <div><b>10</b> business cases included</div>
+    <div><b>8</b> therapeutic-area economies</div>
+    <div><b>120</b> months per playthrough</div>
+    <div><b>1</b> payment · <b>$11</b></div>
+  </div>
+</div></section>
+<style>
+/* page 2 */
+.p2head{max-width:680px;margin-bottom:40px}
+.p2head h2{font-size:clamp(30px,5vw,46px);margin-top:10px}
+.p2head p{color:var(--foil);font-size:17px;margin-top:14px}
+.need{border-left:3px solid var(--mag);padding:16px 20px;background:linear-gradient(90deg,rgba(226,1,119,.06),transparent);border-radius:0 8px 8px 0;margin-bottom:40px;max-width:760px}
+.need .k{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--foil-dim);margin-bottom:6px}
+.need .v{font-family:var(--disp);font-weight:700;font-size:19px;color:var(--paper);letter-spacing:-.01em;line-height:1.3}
+.seg-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:44px}
+.seg{border:1px solid var(--edge);border-radius:9px;background:var(--slab);padding:18px;position:relative;overflow:hidden}
+.seg .no{font-family:var(--mono);font-size:11px;color:var(--mag-soft);letter-spacing:.1em}
+.seg h4{font-size:17px;margin:10px 0 8px}
+.seg .role{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--foil-dim);margin-bottom:10px}
+.seg p{font-size:13px;color:var(--foil);margin:0}
+.seg .learn{margin-top:12px;font-size:12px;color:var(--mint);font-family:var(--mono);letter-spacing:.04em}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px}
+.split .box{border:1px solid var(--edge);border-radius:9px;padding:20px;background:var(--slab2)}
+.split .box.x{border-color:rgba(255,79,107,.3)}
+.split .box.o{border-color:rgba(53,196,160,.35)}
+.split .box .lab{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+.split .box.x .lab{color:var(--rose)}.split .box.o .lab{color:var(--mint)}
+.split .box p{font-size:14px;color:var(--foil);margin:0}
+.course{border:1px solid var(--edge2);border-radius:11px;background:linear-gradient(180deg,#161B33,#0F1729);padding:26px}
+.course .row{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.course h3{font-size:24px}
+.course .tag{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--cobalt-soft);border:1px solid rgba(61,123,239,.4);border-radius:4px;padding:5px 10px}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.tier{border:1px solid var(--edge);border-radius:8px;padding:16px;background:var(--slab)}
+.tier .badge{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;border-radius:4px;border:1px solid;display:inline-block;margin-bottom:11px}
+.tier.a .badge{color:var(--mag-soft);border-color:rgba(226,1,119,.4);background:rgba(226,1,119,.07)}
+.tier.b .badge{color:var(--cobalt-soft);border-color:rgba(61,123,239,.4);background:rgba(61,123,239,.07)}
+.tier.c .badge{color:var(--amber);border-color:rgba(242,169,59,.4);background:rgba(242,169,59,.07)}
+.tier ul{margin:0;padding-left:16px}
+.tier li{font-size:13px;color:var(--foil);margin-bottom:5px}
+.uses{display:flex;gap:14px;flex-wrap:wrap;margin-top:20px}
+.use{flex:1;min-width:200px;font-size:13.5px;color:var(--foil)}
+.use b{display:block;font-family:var(--disp);font-weight:800;font-size:15px;color:var(--paper);margin-bottom:3px}
+@media(max-width:820px){.seg-grid{grid-template-columns:1fr 1fr}.split{grid-template-columns:1fr}.tiers{grid-template-columns:1fr}}
+@media(max-width:520px){.seg-grid{grid-template-columns:1fr}}
+</style>
+
+<!-- ============ PAGE 2 — WHO IT'S FOR / VALUE ============ -->
+<section class="page" id="p2"><div class="wrap"><span class="pagemark">02 / 03</span>
+  <div class="p2head"><span class="eyebrow">Who it's for · what it fixes</span>
+    <h2>Commercial judgment isn't taught in a slide deck.</h2>
+    <p>It's built by making the call, watching it play out, and paying for it. MOLECULE is the first tool that lets your people do that — at the price of lunch, not a consultancy workshop.</p>
+  </div>
+
+  <div class="need"><div class="k">The need we address</div><div class="v">The industry teaches commercial acumen with slideware and $40k live simulations. Nothing sits in between. MOLECULE is the repeatable, low-cost tool that turns theory into instinct.</div></div>
+
+  <div class="seg-grid">
+    <div class="seg"><div class="no">01</div><h4>Marketing &amp; new brand managers</h4><div class="role">Associates · APMs · first-time PMs</div><p>Build the commercial reflexes fast: the brand P&amp;L, gross-to-net, launch pricing, the demand drivers, the exclusivity clock.</p><div class="learn">→ self-study ramp</div></div>
+    <div class="seg"><div class="no">02</div><h4>Brand Managers</h4><div class="role">Product &amp; brand leads</div><p>Pressure-test the decisions you make for real — price vs access, capacity bets, competitive response — with consequences you can rerun.</p><div class="learn">→ decision rehearsal</div></div>
+    <div class="seg"><div class="no">03</div><h4>Marketing Directors</h4><div class="role">Commercial &amp; franchise leads</div><p>An onboarding and team-development asset. Run the ten cases as offsite workshops and see how your team really thinks under a budget.</p><div class="learn">→ team case studies</div></div>
+    <div class="seg"><div class="no">04</div><h4>Pharma CEOs &amp; GMs</h4><div class="role">Small pharma · biotech leadership</div><p>Feel the capital-allocation game: enterprise value, the IPO trade, dilution, and beating the industry table over a full decade.</p><div class="learn">→ capital intuition</div></div>
+  </div>
+
+  <div class="split">
+    <div class="box x"><div class="lab">What it replaces</div><p>Static e-learning modules nobody remembers, and multi-day agency simulations that cost tens of thousands and happen once a year. Both teach <em>about</em> the business.</p></div>
+    <div class="box o"><div class="lab">What it does instead</div><p>Puts the business in your hands. You set the price, build the plant, defend the share — and the ten-year review tells you, in a number, whether your judgment held up.</p></div>
+  </div>
+
+  <div class="course">
+    <div class="row"><h3>The 10 cases are a pharma business mini-course</h3><span class="tag">Included with every licence</span></div>
+    <p style="color:var(--foil);max-width:720px">Each case isolates one competency, sets a measurable win condition, and tells you the moves that clear it. Used solo it's a self-paced curriculum; used with a team it's a set of ready-to-run case studies; used in onboarding it's a structured ramp for a new brand manager's first ninety days.</p>
+    <div class="tiers">
+      <div class="tier a"><span class="badge">Tier I · Brand Manager</span><ul><li>The Clean Launch — launch excellence</li><li>Four Dials, No Waste — driver discipline</li><li>The Access Trade — gross-to-net</li><li>Hold the Line — competitive response</li></ul></div>
+      <div class="tier b"><span class="badge">Tier II · Director</span><ul><li>Portfolio Triage — prioritisation</li><li>The LOE Cliff — lifecycle management</li><li>The Supply Bet — capacity strategy</li></ul></div>
+      <div class="tier c"><span class="badge">Tier III · CEO</span><ul><li>The IPO Decision — capital allocation</li><li>The Compliance Gauntlet — risk &amp; governance</li><li>Category Leader — total command</li></ul></div>
+    </div>
+    <div class="uses">
+      <div class="use"><b>For a new brand manager</b>Run Tier I as your first-90-days business-acumen curriculum.</div>
+      <div class="use"><b>For a team</b>Facilitate the cases as offsite workshops — compare how people allocate a budget under pressure.</div>
+      <div class="use"><b>For a leader</b>Use the full ladder as a competency map from associate to GM.</div>
+    </div>
+  </div>
+</div></section>
+<style>
+/* page 3 */
+.p3grid{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start;width:100%}
+.p3head{margin-bottom:22px}
+.p3head h2{font-size:clamp(28px,4.6vw,42px);margin-top:8px}
+.p3head p{color:var(--foil);margin-top:12px}
+.licence{border:1px solid var(--edge2);border-radius:12px;overflow:hidden;background:var(--slab);box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.licence .lh{padding:18px 22px;border-bottom:1px dashed var(--edge2);background:linear-gradient(180deg,#161B33,#0F1729);display:flex;justify-content:space-between;align-items:center}
+.licence .lh .name{font-family:var(--disp);font-weight:900;font-size:18px}
+.licence .lh .name .dot{color:var(--mag)}
+.licence .lh .rx{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--foil-dim)}
+.licence .price{padding:22px;display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--edge)}
+.licence .price .amt{font-family:var(--disp);font-weight:900;font-size:56px;letter-spacing:-.03em;line-height:1}
+.licence .price .amt .cur{color:var(--mag-soft);font-size:26px;vertical-align:super}
+.licence .price .per{font-family:var(--mono);font-size:12px;color:var(--foil-dim);line-height:1.4}
+.licence .incl{padding:18px 22px}
+.licence .incl li{list-style:none;padding:8px 0 8px 26px;position:relative;font-size:14px;color:var(--foil);border-bottom:1px solid rgba(34,48,79,.5)}
+.licence .incl li:last-child{border-bottom:0}
+.licence .incl li::before{content:"✚";position:absolute;left:0;top:8px;color:var(--mint);font-size:13px}
+.licence .incl li b{color:var(--paper)}
+.steps{display:flex;gap:10px;margin:18px 0 4px;flex-wrap:wrap}
+.step{flex:1;min-width:150px;border:1px solid var(--edge);border-radius:8px;padding:13px;background:var(--slab2)}
+.step .n{font-family:var(--mono);font-size:11px;color:var(--mag-soft)}
+.step .t{font-family:var(--disp);font-weight:800;font-size:14px;margin:6px 0 3px}
+.step .d{font-size:12.5px;color:var(--foil-dim)}
+
+/* form */
+.buy{border:1px solid var(--edge);border-radius:12px;background:var(--slab);padding:24px}
+.buy h3{font-size:22px;margin-bottom:4px}
+.buy .sub{font-size:13.5px;color:var(--foil-dim);margin-bottom:18px}
+label.fld{display:block;margin-bottom:14px}
+label.fld .k{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--foil-dim);display:block;margin-bottom:7px}
+input{width:100%;background:var(--slab3);border:1px solid var(--edge);border-radius:6px;color:var(--paper);padding:13px 14px;font-family:var(--body);font-size:16px}
+input:focus{outline:2px solid var(--mag-soft);outline-offset:1px;border-color:var(--mag)}
+.err{color:var(--rose);font-size:12.5px;margin-top:6px;min-height:16px}
+.buybtn{width:100%;justify-content:center;margin-top:6px}
+.finePrint{font-size:12px;color:var(--foil-dim);margin-top:14px;line-height:1.55}
+.finePrint a{color:var(--cobalt-soft)}
+.ok{display:none;text-align:center;padding:22px 8px}
+.ok .ic{width:52px;height:52px;border-radius:50%;background:rgba(53,196,160,.12);border:1px solid var(--mint);color:var(--mint);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px}
+.ok h3{font-size:22px;margin-bottom:8px}
+.ok p{font-size:14px;color:var(--foil)}
+.ok .again{margin-top:16px}
+.secnote{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--foil-dim);display:flex;align-items:center;gap:7px;justify-content:center;margin-top:16px}
+.secnote .d{width:6px;height:6px;border-radius:50%;background:var(--mint)}
+footer.foot{border-top:1px solid var(--edge);padding:26px 0 40px}
+footer.foot .in{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px}
+@media(max-width:820px){.p3grid{grid-template-columns:1fr;gap:24px}}
+</style>
+
+<!-- ============ PAGE 3 — PRICING + PURCHASE ============ -->
+<section class="page" id="p3"><div class="wrap"><span class="pagemark">03 / 03</span>
+  <div class="p3grid">
+    <div>
+      <div class="p3head"><span class="eyebrow">One licence · one payment</span>
+        <h2>Own it for $11.</h2>
+        <p>No subscription, no seats to renew. A single payment unlocks the full game and the ten-case mini-course — yours to keep and to reuse with your team.</p>
+      </div>
+      <div class="licence">
+        <div class="lh"><div class="name">MOLECULE<span class="dot">.</span> Full Licence</div><div class="rx">Rx · lifetime</div></div>
+        <div class="price"><div class="amt"><span class="cur">$</span>11</div><div class="per">one-time<br>USD · full licence</div></div>
+        <ul class="incl">
+          <li><b>The full game</b> — all 8 therapeutic-area economies, 120-month campaigns, multi-company play</li>
+          <li><b>The 10-case mini-course</b> — Brand Manager, Director &amp; CEO tiers with measurable win conditions</li>
+          <li><b>The Operator's Manual</b> — the complete strategy insert</li>
+          <li><b>Team &amp; onboarding use</b> — run the cases as workshops or a new-hire curriculum</li>
+          <li><b>Runs anywhere</b> — any modern browser, nothing to install, cloud-save ready</li>
+        </ul>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="n">Step 1</div><div class="t">Reserve</div><div class="d">Leave your email &amp; phone below.</div></div>
+        <div class="step"><div class="n">Step 2</div><div class="t">Pay $11</div><div class="d">We send your PayPal link directly.</div></div>
+        <div class="step"><div class="n">Step 3</div><div class="t">Play</div><div class="d">Get the game + mini-course by email.</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="buy">
+        <div id="buyForm">
+          <h3>Reserve your licence</h3>
+          <div class="sub">Enter your details and we'll email your PayPal payment link. Just email and phone — nothing else.</div>
+          <label class="fld"><span class="k">Email</span><input type="email" id="email" placeholder="you@company.com" autocomplete="email"></label>
+          <label class="fld"><span class="k">Phone (with country code)</span><input type="tel" id="phone" placeholder="+52 55 1234 5678" autocomplete="tel"></label>
+          <div class="err" id="formErr"></div>
+          <button class="btn primary lg buybtn" id="buyBtn">Reserve &amp; get my PayPal link →</button>
+          <div class="secnote"><span class="d"></span>Your details go only to the game owner to complete your purchase.</div>
+          <div class="finePrint">By reserving you agree to be contacted about this purchase. Payment is completed manually via PayPal. If your email app opens instead, just press send — that message reaches us the same way.</div>
+        </div>
+        <div class="ok" id="okState">
+          <div class="ic">✓</div>
+          <h3>Request received.</h3>
+          <p>Thanks — your details are on their way to us. Watch your inbox: we'll send your PayPal link for the $11 licence shortly, and the game + mini-course right after payment.</p>
+          <button class="btn again" id="againBtn">Reserve another</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<footer class="foot"><div class="wrap in">
+  <div class="wm" style="font-family:var(--disp);font-weight:900;font-size:16px">MOLECULE<span style="color:var(--mag)">.</span></div>
+  <div class="muted" style="font-size:12px">The official pharma-industry tycoon · educative game &amp; business-case mini-course · one licence, $11</div>
+</div></footer>
+<script>
+"use strict";
+/* ==== config: leads are delivered here ==== */
+var OWNER_EMAIL   = "contacto.luisvillanueva@gmail.com";
+var MAIL_SUBJECT  = "New Molecule Licence Purchased";
+var FORMSUBMIT_URL= "https://formsubmit.co/ajax/" + OWNER_EMAIL;
+
+var $ = function(s){ return document.querySelector(s); };
+
+/* sticky header + active dot on scroll */
+var topbar = $("#top"), dots = Array.prototype.slice.call(document.querySelectorAll(".dots a"));
+var pages  = ["p1","p2","p3"].map(function(id){ return document.getElementById(id); });
+function onScroll(){
+  topbar.classList.toggle("solid", window.scrollY > 40);
+  var mid = window.scrollY + window.innerHeight/2, idx = 0;
+  pages.forEach(function(p,i){ if(p.offsetTop <= mid) idx = i; });
+  dots.forEach(function(d,i){ d.classList.toggle("on", i===idx); });
+}
+window.addEventListener("scroll", onScroll, {passive:true}); onScroll();
+
+/* validation */
+function validEmail(v){ return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v); }
+function validPhone(v){ return v.replace(/[^\d]/g,"").length >= 7; }
+
+/* build the guaranteed fallback email (always addressed to the owner, correct subject) */
+function mailtoFallback(email, phone){
+  var body = "New MOLECULE licence purchase request."
+    + "\r\n\r\nCustomer email: " + email
+    + "\r\nCustomer phone: " + phone
+    + "\r\n\r\nPlease send the PayPal payment link for the $11 full licence.";
+  return "mailto:" + OWNER_EMAIL
+    + "?subject=" + encodeURIComponent(MAIL_SUBJECT)
+    + "&body=" + encodeURIComponent(body);
+}
+
+function showOk(){ $("#buyForm").style.display = "none"; $("#okState").style.display = "block"; }
+
+var busy = false;
+$("#buyBtn").addEventListener("click", function(){
+  if(busy) return;
+  var email = $("#email").value.trim(), phone = $("#phone").value.trim(), err = $("#formErr");
+  err.textContent = "";
+  if(!validEmail(email)){ err.textContent = "Please enter a valid email so we can send your link."; $("#email").focus(); return; }
+  if(!validPhone(phone)){ err.textContent = "Please enter a valid phone number (include country code)."; $("#phone").focus(); return; }
+
+  busy = true; var btn = $("#buyBtn"); var label = btn.textContent; btn.textContent = "Sending…"; btn.disabled = true;
+
+  var payload = {
+    email: email, phone: phone,
+    _subject: MAIL_SUBJECT,
+    _template: "table",
+    message: "New MOLECULE licence purchase request — send the PayPal payment link ($11 full licence) to the customer email above."
+  };
+
+  // Primary: direct send to the owner's inbox via FormSubmit (no backend needed).
+  fetch(FORMSUBMIT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(function(r){ if(!r.ok) throw new Error("bad status"); return r.json(); })
+  .then(function(){ showOk(); })
+  .catch(function(){
+    // Guaranteed fallback: open a pre-addressed email to the owner with the exact subject.
+    try { window.location.href = mailtoFallback(email, phone); } catch(e){}
+    showOk();
+  })
+  .then(function(){ busy = false; btn.textContent = label; btn.disabled = false; });
+});
+
+// submit on Enter from the phone field
+$("#phone").addEventListener("keydown", function(e){ if(e.key === "Enter") $("#buyBtn").click(); });
+$("#email").addEventListener("keydown", function(e){ if(e.key === "Enter") $("#phone").focus(); });
+
+$("#againBtn").addEventListener("click", function(){
+  $("#okState").style.display = "none"; $("#buyForm").style.display = "block";
+  $("#email").value = ""; $("#phone").value = ""; $("#formErr").textContent = "";
+});
+</script>
+</body>
+</html>
