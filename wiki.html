@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MOLECULE — Operator's Manual & Challenge Dossier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B1020; --slab:#131C33; --slab2:#0F1729; --slab3:#0C1426;
+  --edge:#22304F; --edge2:#2E4470; --foil:#9FB0CE; --foil-dim:#69799A; --paper:#EEF3FB;
+  --mag:#E20177; --mag-soft:#FF4FA8; --cobalt:#3D7BEF; --cobalt-soft:#7FA9F7;
+  --amber:#F2A93B; --mint:#35C4A0; --rose:#FF4F6B;
+  --disp:'Archivo','Helvetica Neue',Arial,sans-serif; --body:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:
+    radial-gradient(1100px 640px at 82% -8%, rgba(226,1,119,.10), transparent 60%),
+    radial-gradient(820px 560px at 3% 102%, rgba(61,123,239,.10), transparent 60%), var(--ink);
+  color:var(--paper);font-family:var(--body);font-size:15px;line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0;font-family:var(--disp);font-weight:900;letter-spacing:-.015em;line-height:1.05}
+p{margin:0 0 12px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--foil-dim)}
+.wrap{max-width:1060px;margin:0 auto;padding:0 22px}
+.up{color:var(--mint)}.warn{color:var(--amber)}.bad{color:var(--rose)}.muted{color:var(--foil-dim)}
+a{color:var(--cobalt-soft)}
+hr.rule{border:0;height:1px;background:var(--edge);margin:0}
+
+/* ---- top rx bar ---- */
+.rxbar{border-bottom:1px solid var(--edge);background:rgba(11,16,32,.7);position:sticky;top:0;z-index:20;backdrop-filter:blur(8px)}
+.rxbar .in{max-width:1060px;margin:0 auto;padding:11px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.rxbar .wm{font-family:var(--disp);font-weight:900;font-size:16px;letter-spacing:-.02em}
+.rxbar .wm .dot{color:var(--mag)}
+.rxbar nav{display:flex;gap:2px;flex:1;flex-wrap:wrap}
+.rxbar nav a{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--foil-dim);text-decoration:none;padding:6px 9px;border:1px solid transparent;border-radius:3px}
+.rxbar nav a:hover{color:var(--paper);border-color:var(--edge)}
+.printbtn{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--paper);background:var(--slab);border:1px solid var(--edge);border-radius:3px;padding:7px 12px;cursor:pointer}
+.printbtn:hover{border-color:var(--mag)}
+
+/* ---- hero ---- */
+.hero{padding:66px 0 40px;position:relative;overflow:hidden}
+.hero .kick{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.hero .kick .tag{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--mag-soft);border:1px solid rgba(226,1,119,.4);border-radius:3px;padding:4px 9px;background:rgba(226,1,119,.07)}
+.hero h1{font-size:clamp(46px,9vw,104px);letter-spacing:-.04em;line-height:.92}
+.hero h1 .dot{color:var(--mag)}
+.hero .sub{font-family:var(--disp);font-weight:700;font-size:clamp(17px,2.4vw,24px);color:var(--foil);margin-top:14px;letter-spacing:-.01em}
+.hero .lede{max-width:620px;margin-top:18px;color:var(--foil);font-size:16px}
+.hero .strip{margin-top:34px}
+
+/* signature blister strip */
+.blister{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-width:560px;
+  background:linear-gradient(180deg,#C9D4E6 0%,#94A4BE 42%,#B8C4D9 43%,#7D8DA9 100%);padding:9px;border-radius:4px;position:relative;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55), inset 0 -1px 0 rgba(0,0,0,.35), 0 14px 40px rgba(0,0,0,.4)}
+.blister::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(115deg,rgba(255,255,255,.16) 0 2px,transparent 2px 8px);border-radius:4px}
+.pocket{position:relative;height:64px;border-radius:4px;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 32% 26%, rgba(255,255,255,.85), rgba(120,135,160,.25) 62%, rgba(60,70,90,.35));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.45), inset 0 5px 10px rgba(0,0,0,.18)}
+.pocket .plab{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:7.5px;letter-spacing:.05em;color:#39445A;text-transform:uppercase}
+.cap{width:17px;height:36px;border-radius:9px;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.4);transform:rotate(-14deg)}
+.cap i{position:absolute;left:0;right:0;height:50%}
+.cap i:first-child{top:0;background:var(--mag)}.cap i:last-child{bottom:0;background:#F4F7FC}
+.pocket.done .cap i:first-child{background:var(--mint)}.pocket.done .cap i:last-child{background:#DFF6EE}
+.pocket.active{box-shadow:inset 0 0 0 1.6px var(--mag), inset 0 5px 10px rgba(0,0,0,.18)}
+
+/* ---- section scaffolding ---- */
+section{padding:52px 0;border-top:1px solid var(--edge)}
+.sechead{display:flex;align-items:baseline;gap:16px;margin-bottom:30px;flex-wrap:wrap}
+.secno{font-family:var(--mono);font-size:12px;color:var(--mag-soft);letter-spacing:.1em;border:1px solid rgba(226,1,119,.4);border-radius:3px;padding:4px 8px}
+.sechead h2{font-size:clamp(28px,4.5vw,42px)}
+.secsub{color:var(--foil);max-width:640px;margin-top:2px}
+
+/* prescribing-info blocks */
+.pi{border:1px solid var(--edge);border-radius:6px;background:var(--slab);overflow:hidden;margin-bottom:16px}
+.pi-h{padding:12px 16px;border-bottom:1px solid var(--edge);display:flex;align-items:center;gap:10px;background:var(--slab2)}
+.pi-h .n{font-family:var(--mono);font-size:10px;color:var(--foil-dim);letter-spacing:.14em}
+.pi-h h3{font-size:15px;letter-spacing:.02em;text-transform:uppercase;font-family:var(--mono);font-weight:600}
+.pi-b{padding:16px}
+.pi-b p:last-child{margin-bottom:0}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{border:1px solid var(--edge);border-radius:6px;background:var(--slab);padding:16px}
+.card .lab{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--foil-dim);margin-bottom:7px}
+.card h4{font-size:16px;margin-bottom:6px}
+.card p{font-size:13.5px;color:var(--foil);margin:0}
+
+/* loop diagram */
+.loop{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin:8px 0 4px}
+.loop .node{flex:1;min-width:132px;border:1px solid var(--edge);border-radius:6px;background:var(--slab2);padding:13px}
+.loop .node .ic{font-size:18px;margin-bottom:6px}
+.loop .node .t{font-family:var(--disp);font-weight:800;font-size:14px}
+.loop .node .d{font-size:12px;color:var(--foil-dim);margin-top:3px}
+.loop .arrow{align-self:center;color:var(--mag-soft);font-family:var(--mono);font-size:15px}
+
+/* meters */
+.driver{margin:12px 0}
+.driver .row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.driver .name{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--foil)}
+.driver .who{font-size:12px;color:var(--foil-dim)}
+.meter{height:7px;background:#0A1121;border:1px solid var(--edge);border-radius:4px;overflow:hidden}
+.meter i{display:block;height:100%}
+.m-mag i{background:var(--mag)}.m-cob i{background:var(--cobalt)}.m-mint i{background:var(--mint)}.m-amb i{background:var(--amber)}
+
+/* tension callouts */
+.tension{border-left:3px solid var(--mag);background:linear-gradient(90deg,rgba(226,1,119,.06),transparent);padding:14px 16px;border-radius:0 6px 6px 0;margin-bottom:12px}
+.tension.b{border-left-color:var(--cobalt);background:linear-gradient(90deg,rgba(61,123,239,.06),transparent)}
+.tension.c{border-left-color:var(--amber);background:linear-gradient(90deg,rgba(242,169,59,.06),transparent)}
+.tension .t{font-family:var(--disp);font-weight:800;font-size:16px;margin-bottom:3px}
+.tension .d{font-size:13.5px;color:var(--foil)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:4px}
+th{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--foil-dim);text-align:left;padding:9px 11px;border-bottom:1px solid var(--edge)}
+td{padding:9px 11px;border-bottom:1px solid rgba(34,48,79,.55);vertical-align:top}
+td.mono{font-family:var(--mono)}
+tr:last-child td{border-bottom:0}
+.grade{font-family:var(--disp);font-weight:900;font-size:15px}
+.gA{color:var(--mint)}.gB{color:var(--cobalt-soft)}.gC{color:var(--amber)}.gD{color:var(--rose)}
+
+/* checklist */
+ol.moves{counter-reset:mv;list-style:none;padding:0;margin:0}
+ol.moves li{counter-increment:mv;position:relative;padding:8px 0 8px 40px;border-bottom:1px solid rgba(34,48,79,.5);font-size:13.5px;color:var(--foil)}
+ol.moves li:last-child{border-bottom:0}
+ol.moves li::before{content:counter(mv,decimal-leading-zero);position:absolute;left:0;top:8px;font-family:var(--mono);font-size:11px;color:var(--mag-soft);border:1px solid rgba(226,1,119,.35);border-radius:3px;padding:2px 5px}
+ol.moves li b{color:var(--paper)}
+</style>
+</head>
+<body>
+<div class="rxbar"><div class="in">
+  <div class="wm">MOLECULE<span class="dot">.</span></div>
+  <nav>
+    <a href="#start">Quick start</a><a href="#loop">The loop</a><a href="#screens">Screens</a>
+    <a href="#pipeline">Pipeline</a><a href="#demand">Demand</a><a href="#tensions">Tensions</a>
+    <a href="#finance">Finance</a><a href="#scoring">Scoring</a><a href="#cases">Challenges</a>
+  </nav>
+  <button class="printbtn" onclick="window.print()">Print / Save PDF</button>
+</div></div>
+
+<div class="hero"><div class="wrap">
+  <div class="kick"><span class="tag">Prescribing information for operators</span></div>
+  <h1>Operator's<br>Manual<span class="dot">.</span></h1>
+  <div class="sub">MOLECULE — a pharma tycoon &nbsp;·&nbsp; manual &amp; challenge dossier</div>
+  <p class="lede">One click is one month. You have ten years to turn a molecule into a company. This is the insert that tells you what every dial does — and ten calibrated challenges that turn the game into a training ground for the decisions brand managers and directors actually get paid to make.</p>
+  <div class="strip"><div class="blister">
+    <div class="pocket done"><div class="cap"><i></i><i></i></div><div class="plab">Disc</div></div>
+    <div class="pocket done"><div class="cap"><i></i><i></i></div><div class="plab">Ph I</div></div>
+    <div class="pocket done"><div class="cap"><i></i><i></i></div><div class="plab">Ph II</div></div>
+    <div class="pocket active"><div class="cap"><i></i><i></i></div><div class="plab">Ph III</div></div>
+    <div class="pocket"><div class="cap"><i></i><i></i></div><div class="plab">Review</div></div>
+  </div></div>
+</div></div>
+<!-- ============ QUICK START ============ -->
+<section id="start"><div class="wrap">
+  <div class="sechead"><span class="secno">INDICATIONS</span><div><h2>What this is, in one screen</h2><p class="secsub">MOLECULE is a decision simulator wearing a tycoon game. You run a pharmaceutical company across ten years — 120 monthly turns — and the only thing that counts at the end is the value of the stake you still own.</p></div></div>
+  <div class="grid3">
+    <div class="card"><div class="lab">The unit of time</div><h4>1 click = 1 month</h4><p>Set your levers, then advance. Ten years is roughly one development cycle — long enough that today's revenue was decided by choices you made years ago.</p></div>
+    <div class="card"><div class="lab">The unit of progress</div><h4>Molecule → brand</h4><p>Revenue exists only after a molecule survives five R&amp;D phases and you build the plant to supply it. Nothing earns before launch.</p></div>
+    <div class="card"><div class="lab">The unit of winning</div><h4>Founder stake value</h4><p>Your score is ownership&nbsp;×&nbsp;share price. Build real value <em>and</em> don't give the company away raising money for it.</p></div>
+  </div>
+  <div class="pi" style="margin-top:20px">
+    <div class="pi-h"><span class="n">§1</span><h3>Directions — your first 24 months</h3></div>
+    <div class="pi-b"><ol class="moves">
+      <li>Register a profile, then <b>found a company</b>. Pick a therapeutic area — you're choosing an economic model, not a disease. Read its one-line note before you commit.</li>
+      <li>You start with a Phase III asset and an early program. <b>Keep the Phase III moving</b> and open one more program so the board is never empty.</li>
+      <li>When your first molecule is approved, open the <b>launch plan</b>. Set price near reference (0.9–1.1×) and build capacity to roughly 70% of mature demand. Don't over-build on day one.</li>
+      <li>The month you launch, start funding all four <b>demand drivers</b> and assign reps to ~50% detailing coverage. Drivers decay if you don't.</li>
+      <li>Watch cash. Below zero draws the revolver; exhaust the revolver and you're insolvent. The failure mode is almost never a bad molecule — it's a good one funded on a timeline the balance sheet couldn't carry.</li>
+    </ol></div>
+  </div>
+</div></section>
+
+<!-- ============ THE LOOP ============ -->
+<section id="loop"><div class="wrap">
+  <div class="sechead"><span class="secno">MECHANISM</span><div><h2>The core loop</h2><p class="secsub">Six screens, one cycle. Value is created on the left and defended on the right. Money and attention flow clockwise; neglect anywhere shows up two turns later.</p></div></div>
+  <div class="loop">
+    <div class="node"><div class="ic">⚗</div><div class="t">Pipeline</div><div class="d">Develop molecules through five phases.</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="ic">℞</div><div class="t">Portfolio</div><div class="d">Launch &amp; run marketed brands.</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="ic">👥</div><div class="t">Field force</div><div class="d">Detail brands to prescribers.</div></div>
+  </div>
+  <div class="loop" style="margin-top:10px">
+    <div class="node"><div class="ic">◎</div><div class="t">Market</div><div class="d">Read intensity &amp; the exclusivity clock.</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="ic">$</div><div class="t">Finance</div><div class="d">Close the P&amp;L; raise capital; IPO.</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="ic">▲</div><div class="t">Rankings</div><div class="d">Measure yourself against rivals.</div></div>
+  </div>
+  <p class="muted" style="margin-top:16px;font-size:13.5px">Read it as a sentence: you <span style="color:var(--paper)">develop</span> a molecule, <span style="color:var(--paper)">launch</span> it, <span style="color:var(--paper)">detail</span> it, <span style="color:var(--paper)">defend</span> its market, <span style="color:var(--paper)">finance</span> the next one, and <span style="color:var(--paper)">rank</span> against everyone doing the same.</p>
+</div></section>
+
+<!-- ============ SCREENS ============ -->
+<section id="screens"><div class="wrap">
+  <div class="sechead"><span class="secno">DOSAGE</span><div><h2>The six screens</h2><p class="secsub">What each one is for, and the levers that matter. Every section in the game carries a "?" — tap it in-game for the same explanation in context.</p></div></div>
+
+  <div class="pi"><div class="pi-h"><span class="n">℞ 01</span><h3>Pipeline — research &amp; development</h3></div><div class="pi-b">
+    <p>Programs move through Discovery → Phase I → II → III → Regulatory review. Each phase burns cash monthly and can fail — money spent on a failed program is gone. The blister strip on each program is a live progress bar: filled pockets are cleared phases, the magenta pocket is where you are.</p>
+    <p><b>Levers:</b> start new programs; set <b>trial intensity</b> (lean = cheap, slow, riskier · standard · accelerated = expensive, fast, slightly safer); rename a molecule to give it a brand identity; terminate a program to stop the bleed. Only an <b>approved</b> molecule opens a launch plan.</p>
+  </div></div>
+
+  <div class="pi"><div class="pi-h"><span class="n">℞ 02</span><h3>Portfolio — marketed brands</h3></div><div class="pi-b">
+    <p>Where revenue lives. Each brand shows net revenue, patients, share, net price, gross-to-net, and capacity use. Four demand drivers decide your prescriptions, and all four decay every month you stop paying for them.</p>
+    <p><b>Levers:</b> monthly spend on promotion, medical affairs, and market access; expand manufacturing capacity (comes online next month); reprice. Capacity is a hard ceiling — unserved demand goes to the competitor and doesn't come back.</p>
+  </div></div>
+
+  <div class="pi"><div class="pi-h"><span class="n">℞ 03</span><h3>Field force — commercial operations</h3></div><div class="pi-b">
+    <p>Representatives are your only commercial cost that scales linearly and can't be switched off mid-quarter. Assign them across brands to build detailing coverage toward the level each market needs.</p>
+    <p><b>Levers:</b> hire/cut headcount; assign reps per brand; fund a compliance programme. Watch your compliance posture — promote too aggressively and an audit becomes a fine.</p>
+  </div></div>
+
+  <div class="pi"><div class="pi-h"><span class="n">℞ 04</span><h3>Market — competitive landscape</h3></div><div class="pi-b">
+    <p>Each therapeutic area is a different economic model: patient volume, price ceiling, elasticity, and competitive intensity. Intensity rises every month whether or not you act. The exclusivity clock counts every brand down to loss of exclusivity, when generics collapse your net price.</p>
+    <p><b>Read for:</b> where your share sits, which areas are heating up, and how many months of exclusivity each brand has left.</p>
+  </div></div>
+
+  <div class="pi"><div class="pi-h"><span class="n">℞ 05</span><h3>Finance — ledger, capital &amp; stock</h3></div><div class="pi-b">
+    <p>The P&amp;L closes every month. Below-zero cash draws the revolver. Once enterprise value clears the threshold you can take the company public — an IPO raises cash but permanently dilutes you. Afterward: a live share price, secondary offerings, and buybacks.</p>
+    <p><b>Levers:</b> IPO (choose your float); secondary offering (raise cash, dilute); buyback (spend cash, raise ownership). Your stake value = ownership × price.</p>
+  </div></div>
+
+  <div class="pi"><div class="pi-h"><span class="n">℞ 06</span><h3>Rankings — industry leaderboard</h3></div><div class="pi-b">
+    <p>Nine rival firms, each with its own enterprise value, share price, and products. They grow and launch every month. When a rival launches in your area, competitive intensity there rises and your share falls — the table is wired to the simulation, not decoration. You're ranked by market value against them.</p>
+  </div></div>
+</div></section>
+<!-- ============ PIPELINE DETAIL ============ -->
+<section id="pipeline"><div class="wrap">
+  <div class="sechead"><span class="secno">MECHANISM · R&amp;D</span><div><h2>Five phases, one clock</h2><p class="secsub">Every molecule you own is somewhere on this strip. Each phase has a duration, a cost, and a probability of success. Fail, and the pocket cracks — along with everything you spent getting there.</p></div></div>
+  <div class="blister" style="max-width:100%;margin-bottom:20px">
+    <div class="pocket done"><div class="cap"><i></i><i></i></div><div class="plab">Discovery · 4mo</div></div>
+    <div class="pocket done"><div class="cap"><i></i><i></i></div><div class="plab">Phase I · 6mo</div></div>
+    <div class="pocket active"><div class="cap"><i></i><i></i></div><div class="plab">Phase II · 9mo</div></div>
+    <div class="pocket"><div class="cap"><i></i><i></i></div><div class="plab">Phase III · 13mo</div></div>
+    <div class="pocket"><div class="cap"><i></i><i></i></div><div class="plab">Review · 6mo</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><div class="lab">What the phases teach</div><p style="font-size:14px;color:var(--foil)">Attrition is front-loaded and brutal — Phase II is where most molecules die. A program you nurse through three phases and lose in the fourth cost you years and cash for nothing. That's the real R&amp;D lesson: <b style="color:var(--paper)">a full pipeline is insurance, not ambition.</b></p></div>
+    <div class="card"><div class="lab">Trial intensity is a trade</div><p style="font-size:14px;color:var(--foil)">Lean protocols buy runway at the cost of time and success odds. Accelerated protocols buy speed and a slightly better read-out at a real cash premium. Pick intensity against your <b style="color:var(--paper)">cash position and the exclusivity clock</b>, not out of habit.</p></div>
+  </div>
+</div></section>
+
+<!-- ============ DEMAND ============ -->
+<section id="demand"><div class="wrap">
+  <div class="sechead"><span class="secno">MECHANISM · COMMERCIAL</span><div><h2>Four dials decide your prescriptions</h2><p class="secsub">Demand is not a property of the molecule. It's the product of four drivers you pay to build — and every one of them decays the month you stop. A weak molecule can't be rescued by spend; a strong one can be squandered by neglect.</p></div></div>
+  <div class="grid2">
+    <div class="card">
+      <div class="driver"><div class="row"><span class="name">Awareness</span><span class="who">Promotion / DTC</span></div><div class="meter m-mag"><i style="width:72%"></i></div></div>
+      <div class="driver"><div class="row"><span class="name">Detailing</span><span class="who">Field force coverage</span></div><div class="meter m-cob"><i style="width:58%"></i></div></div>
+      <div class="driver"><div class="row"><span class="name">Access</span><span class="who">Rebates / formulary</span></div><div class="meter m-mint"><i style="width:64%"></i></div></div>
+      <div class="driver"><div class="row"><span class="name">Credibility</span><span class="who">Medical affairs / KOL</span></div><div class="meter m-amb"><i style="width:49%"></i></div></div>
+    </div>
+    <div class="card"><div class="lab">How to read them</div>
+      <p style="font-size:14px;color:var(--foil)">The four drivers combine into a prescription share — but they aren't interchangeable. In oncology and rare disease, <b style="color:var(--paper)">credibility and access</b> outrun promotion. In cardio and anti-infectives, <b style="color:var(--paper)">detailing reach and access</b> carry the volume. Fund the drivers your area actually rewards, and stop over-feeding one you've already saturated.</p>
+    </div>
+  </div>
+  <p class="muted" style="margin-top:16px;font-size:13.5px">Decay is the point. A driver at 70% that you stop paying for slides back toward its floor within a few months — which is why a brand you've "finished" launching still needs a maintenance budget, and why walking away from a brand is a decision, not a default.</p>
+</div></section>
+
+<!-- ============ TENSIONS ============ -->
+<section id="tensions"><div class="wrap">
+  <div class="sechead"><span class="secno">WARNINGS</span><div><h2>Three tensions the game will not let you dodge</h2><p class="secsub">Every hard decision in MOLECULE is one of these three in disguise. If a choice feels easy, you've probably missed which tension you're actually resolving.</p></div></div>
+  <div class="tension"><div class="t">Access costs price</div><div class="d">Buying formulary position raises your gross-to-net. Coverage you can't convert into volume is just margin you gave to a payer. The discipline: only pay for access that moves prescriptions — and prove it does.</div></div>
+  <div class="tension b"><div class="t">Capacity is a bet</div><div class="d">You commit manufacturing capacity before you know demand. Under-build and unserved patients go to the competitor permanently; over-build and cash sits in idle plant. There is no safe default — only a calibrated wager.</div></div>
+  <div class="tension c"><div class="t">The clock never stops</div><div class="d">Exclusivity is finite and competitive intensity rises every month. A share you are not actively defending is a share you are donating. Standing still is the one move that always loses.</div></div>
+</div></section>
+
+<!-- ============ FINANCE ============ -->
+<section id="finance"><div class="wrap">
+  <div class="sechead"><span class="secno">MECHANISM · CAPITAL</span><div><h2>Enterprise value, the IPO, and your stake</h2><p class="secsub">The finance screen is where a good operator separates from a great one. Cash is oxygen; equity is oxygen you pay for by selling future breaths.</p></div></div>
+  <div class="loop" style="margin-bottom:18px">
+    <div class="node"><div class="ic">◱</div><div class="t">Enterprise value</div><div class="d">Cash, debt, and the modelled worth of brands + pipeline.</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="ic">◲</div><div class="t">IPO</div><div class="d">Sell a float of new shares. Raises cash, dilutes you permanently.</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="ic">◆</div><div class="t">Share price</div><div class="d">Reprices monthly against EV and earnings surprises.</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="ic">★</div><div class="t">Founder stake</div><div class="d">Ownership × price. This is your score.</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><div class="lab">Why the score is your stake, not market cap</div><p style="font-size:14px;color:var(--foil)">A founder who builds a $2B company but floats 80% of it to get there is worth less than one who builds $900M and kept 70%. The game rewards <b style="color:var(--paper)">value created minus value given away</b> — the actual job of capital allocation.</p></div>
+    <div class="card"><div class="lab">When to raise</div><p style="font-size:14px;color:var(--foil)">Raise equity only when the pipeline can turn the cash into more than the dilution costs you. A secondary offering to fund a Phase III that launches is smart; one to plug a hole you dug with idle capacity is how you shrink your own stake.</p></div>
+  </div>
+</div></section>
+
+<!-- ============ EVENTS + SAVING ============ -->
+<section id="events"><div class="wrap">
+  <div class="sechead"><span class="secno">INTERACTIONS</span><div><h2>Events, decisions &amp; saving</h2><p class="secsub">Things happen between your moves. Some are opportunities, some are ambushes, and the game judges the cumulative pattern of your choices, not any single one.</p></div></div>
+  <div class="grid3">
+    <div class="card"><div class="lab">Decisions</div><p>Safety signals, payer rebate demands, audits, lawsuits, activist investors, M&amp;A offers, supply shocks, tenders. Each is a fork with a cost on both sides — there is rarely a free option.</p></div>
+    <div class="card"><div class="lab">M&amp;A</div><p>You'll be offered clinical-stage assets and marketed brands to buy, and unsolicited offers to sell. Buying skips years of attrition at a premium; selling books cash but surrenders the upside.</p></div>
+    <div class="card"><div class="lab">Saving</div><p>Autosave fires after every action (watch the "Saved" chip). Progress lives in Firebase if you connect it, on your device otherwise, and you can always export a <span class="mono">.sav</span> file as a portable backup.</p></div>
+  </div>
+</div></section>
+
+<!-- ============ SCORING ============ -->
+<section id="scoring"><div class="wrap">
+  <div class="sechead"><span class="secno">HOW SUPPLIED</span><div><h2>Scoring &amp; the ten-year review</h2><p class="secsub">At month 120 the board grades you on founder stake value. These bands are your target lines — the challenge dossier is built around them.</p></div></div>
+  <table>
+    <thead><tr><th style="width:90px">Grade</th><th>Founder stake at year 10</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td><span class="grade gA">A</span></td><td class="mono">&gt; $1.5B</td><td>Category leader. A live pipeline, defended brands, and disciplined capital — all at once.</td></tr>
+      <tr><td><span class="grade gB">B</span></td><td class="mono">&gt; $600M</td><td>Credible mid-cap. You built something real and kept most of it.</td></tr>
+      <tr><td><span class="grade gC">C</span></td><td class="mono">&gt; $180M</td><td>Survived. A brand in market and a company still standing.</td></tr>
+      <tr><td><span class="grade gD">D</span></td><td class="mono">&lt; $180M</td><td>Sub-scale — or insolvent, if the revolver ran dry first.</td></tr>
+    </tbody>
+  </table>
+  <p class="muted" style="margin-top:14px;font-size:13.5px">Grade is only half the review. The other half is your rank on the leaderboard — reaching Grade A while finishing outside the top three means the industry grew faster than you did.</p>
+</div></section>
+<style>
+/* ---- challenge dossier ---- */
+.tierhead{display:flex;align-items:center;gap:14px;margin:38px 0 20px;flex-wrap:wrap}
+.tierhead .badge{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:6px 11px;border-radius:4px;border:1px solid}
+.tierhead h3{font-size:24px}
+.tierhead .who{font-size:13.5px;color:var(--foil-dim)}
+.t1 .badge{color:var(--mag-soft);border-color:rgba(226,1,119,.45);background:rgba(226,1,119,.08)}
+.t2 .badge{color:var(--cobalt-soft);border-color:rgba(61,123,239,.45);background:rgba(61,123,239,.08)}
+.t3 .badge{color:var(--amber);border-color:rgba(242,169,59,.45);background:rgba(242,169,59,.08)}
+
+.case{border:1px solid var(--edge);border-radius:8px;background:var(--slab);overflow:hidden;margin-bottom:20px;border-top:3px solid var(--mag)}
+.case.d2{border-top-color:var(--cobalt)}.case.d3{border-top-color:var(--amber)}
+.case-h{padding:16px 18px;display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--edge)}
+.case-h .code{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--foil-dim);border:1px solid var(--edge);border-radius:4px;padding:5px 8px;white-space:nowrap}
+.case-h .ttl{flex:1;min-width:200px}
+.case-h .ttl h4{font-size:21px;letter-spacing:-.01em}
+.case-h .ttl .comp{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mag-soft);margin-top:5px}
+.case.d2 .ttl .comp{color:var(--cobalt-soft)}.case.d3 .ttl .comp{color:var(--amber)}
+.dose{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.dose .lab{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--foil-dim)}
+.dose .pills{display:flex;gap:4px}
+.dose .pill{width:20px;height:8px;border-radius:4px;background:#0A1121;border:1px solid var(--edge)}
+.dose .pill.on{background:var(--mag);border-color:var(--mag)}
+.case.d2 .dose .pill.on{background:var(--cobalt);border-color:var(--cobalt)}
+.case.d3 .dose .pill.on{background:var(--amber);border-color:var(--amber)}
+
+.realworld{padding:12px 18px;background:var(--slab2);border-bottom:1px solid var(--edge);font-size:13px;color:var(--foil)}
+.realworld b{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--foil-dim);display:block;margin-bottom:3px}
+.case-body{padding:18px}
+.sob{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--edge);border-radius:6px;overflow:hidden;margin-bottom:16px}
+.sob>div{padding:13px 15px;border-right:1px solid var(--edge)}
+.sob>div:last-child{border-right:0}
+.sob .k{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--foil-dim);margin-bottom:7px}
+.sob .v{font-size:13px;color:var(--foil);line-height:1.5}
+.sob .v .big{font-family:var(--disp);font-weight:800;font-size:17px;color:var(--paper);display:block;margin-bottom:2px;letter-spacing:-.01em}
+.case-body .mv-lab{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--foil-dim);margin:4px 0 6px}
+.lesson{margin-top:16px;border-left:3px solid var(--mag);padding:11px 14px;background:linear-gradient(90deg,rgba(226,1,119,.06),transparent);border-radius:0 6px 6px 0}
+.case.d2 .lesson{border-left-color:var(--cobalt);background:linear-gradient(90deg,rgba(61,123,239,.06),transparent)}
+.case.d3 .lesson{border-left-color:var(--amber);background:linear-gradient(90deg,rgba(242,169,59,.06),transparent)}
+.lesson .k{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--foil-dim);margin-bottom:3px}
+.lesson .v{font-size:14.5px;font-family:var(--disp);font-weight:700;color:var(--paper);letter-spacing:-.01em;line-height:1.35}
+.debrief{margin-top:12px;font-size:13px;color:var(--foil-dim)}
+.debrief b{color:var(--foil)}
+@media(max-width:720px){.grid2,.grid3,.sob{grid-template-columns:1fr}.sob>div{border-right:0;border-bottom:1px solid var(--edge)}.sob>div:last-child{border-bottom:0}.loop .arrow{display:none}}
+
+@media print{
+  body{background:#fff;color:#10151f}
+  .rxbar,.printbtn{display:none}
+  section{border-top:1px solid #ccd;padding:24px 0;break-inside:avoid}
+  .case,.pi,.card,.tension{break-inside:avoid;border-color:#c9d2e0;background:#fff}
+  .hero{padding:20px 0}
+  h1,h2,h3,h4,.hero h1{color:#0B1020}
+  .secsub,.card p,.sob .v,.realworld,.tension .d{color:#33405a}
+  .muted{color:#66738c}
+  .case-h,.realworld,.pi-h{background:#f4f6fb}
+  .sob>div,.pi,.card,.case{background:#fff}
+}
+</style>
+
+<!-- ============ CHALLENGE DOSSIER ============ -->
+<section id="cases"><div class="wrap">
+  <div class="sechead"><span class="secno">CLINICAL CASES</span><div><h2>The challenge dossier</h2><p class="secsub">Ten cases, three tiers. Each isolates one competency a brand manager or director gets measured on in real life, gives you a measurable win condition calibrated to the actual simulation, and tells you the moves that clear it. Run them as scenarios — reload if you miss. The <em>dose</em> rating is difficulty.</p></div></div>
+
+  <!-- ===== TIER I ===== -->
+  <div class="tierhead t1"><span class="badge">Tier I</span><h3>Brand Manager</h3><span class="who">Own one brand. Prove you can launch it, feed it, price it, and defend it.</span></div>
+
+  <div class="case">
+    <div class="case-h"><span class="code">BM · 01</span><div class="ttl"><h4>The Clean Launch</h4><div class="comp">Competency — launch excellence</div></div>
+      <div class="dose"><span class="lab">Dose</span><div class="pills"><span class="pill on"></span><span class="pill on"></span><span class="pill"></span><span class="pill"></span><span class="pill"></span></div></div></div>
+    <div class="realworld"><b>In your real world</b>A launch you only get to do once. Price and supply are anchored in the first weeks and are nearly impossible to walk back — the pre-launch decisions carry the whole curve.</div>
+    <div class="case-body">
+      <div class="sob">
+        <div><div class="k">Setup</div><div class="v"><span class="big">Standard start</span>$210M. Any area. Take your inherited Phase III asset to approval.</div></div>
+        <div><div class="k">Objective</div><div class="v"><span class="big">$8M net / mo</span>within 18 months of launch — without drawing the revolver.</div></div>
+        <div><div class="k">Constraints</div><div class="v"><span class="big">Organic only</span>No IPO, no acquisitions. This is about the launch, not the balance sheet.</div></div>
+      </div>
+      <div class="mv-lab">Moves to run</div>
+      <ol class="moves">
+        <li>Launch at <b>0.9–1.1× reference price</b>. Premium pricing here starves access before you've earned credibility.</li>
+        <li>Build capacity to <b>~70% of mature demand</b> shown in the launch planner — enough to serve the ramp, not so much that cash sits idle.</li>
+        <li>From month one, fund <b>promotion and access together</b> and assign reps to ~50% detailing coverage. All four drivers start at their floor.</li>
+        <li>Hold your nerve through the ramp — share compounds as awareness and access climb. Don't reprice in the first year.</li>
+      </ol>
+      <div class="lesson"><div class="k">The lesson</div><div class="v">A launch is price and capacity set before month one, then four drivers fed without a gap. Everything else is patience.</div></div>
+      <div class="debrief"><b>What good looks like:</b> a smooth revenue ramp with capacity utilisation near 90% and no revolver draw. If you're at $8M with cash to spare, you left price on the table; if you drew the revolver, you built too much plant too early.</div>
+    </div>
+  </div>
+
+  <div class="case">
+    <div class="case-h"><span class="code">BM · 02</span><div class="ttl"><h4>Four Dials, No Waste</h4><div class="comp">Competency — demand-driver discipline</div></div>
+      <div class="dose"><span class="lab">Dose</span><div class="pills"><span class="pill on"></span><span class="pill on"></span><span class="pill"></span><span class="pill"></span><span class="pill"></span></div></div></div>
+    <div class="realworld"><b>In your real world</b>SOV vs SOM. Every driver has a saturation point; spend past it and you're buying share of voice that no longer converts to share of market.</div>
+    <div class="case-body">
+      <div class="sob">
+        <div><div class="k">Setup</div><div class="v"><span class="big">One live brand</span>Any area, any start. At least 12 months post-launch.</div></div>
+        <div><div class="k">Objective</div><div class="v"><span class="big">All four ≥ 60%</span>awareness, detailing, access, credibility — simultaneously, while cash-flow positive for 6 straight months.</div></div>
+        <div><div class="k">Constraints</div><div class="v"><span class="big">One brand's budget</span>No selling other assets to subsidise it. It funds itself.</div></div>
+      </div>
+      <div class="mv-lab">Moves to run</div>
+      <ol class="moves">
+        <li>Push each driver up <b>one at a time</b> and watch where extra spend stops moving the meter — that's its saturation point for this area.</li>
+        <li>Rebalance toward the drivers your <b>area rewards</b>: credibility and access in specialty; detailing and access in primary care.</li>
+        <li>Once all four clear 60%, <b>trim to maintenance</b> — the decay rate, not the build rate. Redeploy the saved cash.</li>
+      </ol>
+      <div class="lesson"><div class="k">The lesson</div><div class="v">The skill isn't spending — it's knowing the exact point where a driver stops paying you back, and stopping there.</div></div>
+      <div class="debrief"><b>What good looks like:</b> four meters held in a tight band on a budget that shrinks after month three. If any driver needs constant increases to stay up, you're funding decay, not growth.</div>
+    </div>
+  </div>
+
+  <div class="case">
+    <div class="case-h"><span class="code">BM · 03</span><div class="ttl"><h4>The Access Trade</h4><div class="comp">Competency — market access &amp; gross-to-net</div></div>
+      <div class="dose"><span class="lab">Dose</span><div class="pills"><span class="pill on"></span><span class="pill on"></span><span class="pill on"></span><span class="pill"></span><span class="pill"></span></div></div></div>
+    <div class="realworld"><b>In your real world</b>The lead-payer rebate demand. Say yes and you win the tier but shrink net price everywhere; say no and you protect price but lose covered lives. The trap is buying access that doesn't convert.</div>
+    <div class="case-body">
+      <div class="sob">
+        <div><div class="k">Setup</div><div class="v"><span class="big">Immunology brand</span>(or any brand when the payer-rebate event fires). Biologic economics make this bite hardest.</div></div>
+        <div><div class="k">Objective</div><div class="v"><span class="big">Grow share, GtN &lt; 30%</span>Increase covered volume while keeping gross-to-net under roughly 30%.</div></div>
+        <div><div class="k">Constraints</div><div class="v"><span class="big">No price rescue</span>You can't raise list price to paper over the rebate. Access must earn its cost.</div></div>
+      </div>
+      <div class="mv-lab">Moves to run</div>
+      <ol class="moves">
+        <li>Before accepting any rebate, check the <b>share it actually buys</b> against the net-price it costs in the portfolio view.</li>
+        <li>Accept access that moves volume; <b>hold price and lose the tier</b> when the rebate buys coverage you can't convert.</li>
+        <li>Use <b>medical affairs</b> to lift credibility — it grows share without touching gross-to-net at all.</li>
+      </ol>
+      <div class="lesson"><div class="k">The lesson</div><div class="v">Access costs price. Coverage you can't convert into prescriptions is margin you handed a payer for nothing.</div></div>
+      <div class="debrief"><b>What good looks like:</b> rising share with gross-to-net flat or falling. If share climbs but GtN blows past 30%, you bought lives you aren't converting.</div>
+    </div>
+  </div>
+
+  <div class="case">
+    <div class="case-h"><span class="code">BM · 04</span><div class="ttl"><h4>Hold the Line</h4><div class="comp">Competency — competitive response</div></div>
+      <div class="dose"><span class="lab">Dose</span><div class="pills"><span class="pill on"></span><span class="pill on"></span><span class="pill on"></span><span class="pill"></span><span class="pill"></span></div></div></div>
+    <div class="realworld"><b>In your real world</b>A competitor launches into your category. The reflex is to cut price. The disciplined answer is to out-detail and out-evidence them, and defend price.</div>
+    <div class="case-body">
+      <div class="sob">
+        <div><div class="k">Setup</div><div class="v"><span class="big">Play to a rival launch</span>Advance until a competitor launches in your area (intensity jumps; the feed announces it).</div></div>
+        <div><div class="k">Objective</div><div class="v"><span class="big">Keep &gt; 50% of peak</span>Hold your brand's market share above half its pre-launch peak through the next 12 months.</div></div>
+        <div><div class="k">Constraints</div><div class="v"><span class="big">No price war</span>Defend without cutting price more than 5%. Win on reach and credibility.</div></div>
+      </div>
+      <div class="mv-lab">Moves to run</div>
+      <ol class="moves">
+        <li>Respond with <b>detailing and medical affairs</b>, not discounts — reach and credibility are what a new entrant can't buy quickly.</li>
+        <li>Reinforce <b>access</b> so the rival can't take your formulary position while you're distracted.</li>
+        <li>Accept a lower plateau if you must — the goal is a <b>defended floor</b>, not the old peak.</li>
+      </ol>
+      <div class="lesson"><div class="k">The lesson</div><div class="v">A share you aren't defending is a share you're donating. Price is the lazy lever; reach and evidence are the durable ones.</div></div>
+      <div class="debrief"><b>What good looks like:</b> share dips, then stabilises above the 50% line on a defended net price. If you held share only by slashing price, you won the battle and lost the P&amp;L.</div>
+    </div>
+  </div>
+  <!-- ===== TIER II ===== -->
+  <div class="tierhead t2"><span class="badge">Tier II</span><h3>Director</h3><span class="who">Run a portfolio. Decide where to invest, where to stop, and how to survive the cliff.</span></div>
+
+  <div class="case d2">
+    <div class="case-h"><span class="code">DIR · 05</span><div class="ttl"><h4>Portfolio Triage</h4><div class="comp">Competency — prioritisation &amp; resource allocation</div></div>
+      <div class="dose"><span class="lab">Dose</span><div class="pills"><span class="pill on"></span><span class="pill on"></span><span class="pill on"></span><span class="pill"></span><span class="pill"></span></div></div></div>
+    <div class="realworld"><b>In your real world</b>Three brands, one budget. The hardest call a director makes isn't where to invest — it's where to stop. Harvesting a declining brand to fund a growth one is the whole job.</div>
+    <div class="case-body">
+      <div class="sob">
+        <div><div class="k">Setup</div><div class="v"><span class="big">3+ marketed brands</span>Build to a portfolio with at least one asset past its growth phase or nearing LOE.</div></div>
+        <div><div class="k">Objective</div><div class="v"><span class="big">Reach Grade B</span>Enterprise value ≥ $600M while deliberately harvesting a declining brand — promo cut to maintenance, cash redeployed to a growth asset.</div></div>
+        <div><div class="k">Constraints</div><div class="v"><span class="big">No new capital</span>Fund growth by reallocating from the harvest, not by raising money.</div></div>
+      </div>
+      <div class="mv-lab">Moves to run</div>
+      <ol class="moves">
+        <li>Rank brands by <b>trajectory, not size</b>: months of exclusivity left × current growth. The oldest large brand is often the harvest candidate.</li>
+        <li>On the harvest brand, cut promotion to <b>maintenance only</b> and let it coast — you're milking cash flow, not defending share.</li>
+        <li>Redeploy that budget into the <b>growth asset's</b> drivers and capacity. Watch enterprise value follow the reallocation.</li>
+      </ol>
+      <div class="lesson"><div class="k">The lesson</div><div class="v">Harvest, don't invest, on the brand whose franchise is over. Refusing to name it is how directors quietly starve their winners.</div></div>
+      <div class="debrief"><b>What good looks like:</b> total EV rising even as one brand's revenue declines on purpose. If every brand still gets full support, you haven't triaged — you've spread the budget thin and called it fairness.</div>
+    </div>
+  </div>
+
+  <div class="case d2">
+    <div class="case-h"><span class="code">DIR · 06</span><div class="ttl"><h4>The LOE Cliff</h4><div class="comp">Competency — lifecycle management</div></div>
+      <div class="dose"><span class="lab">Dose</span><div class="pills"><span class="pill on"></span><span class="pill on"></span><span class="pill on"></span><span class="pill on"></span><span class="pill"></span></div></div></div>
+    <div class="realworld"><b>In your real world</b>Loss of exclusivity. Generics collapse net price overnight. The revenue on the P&amp;L the year after the cliff was decided by a pipeline choice you made half a decade earlier.</div>
+    <div class="case-body">
+      <div class="sob">
+        <div><div class="k">Setup</div><div class="v"><span class="big">Own a brand near LOE</span>Track a brand into the last ~24 months of exclusivity (the Market screen's clock).</div></div>
+        <div><div class="k">Objective</div><div class="v"><span class="big">&lt; 30% revenue fall</span>Across the 24 months around the cliff, keep total company net revenue from dropping more than 30%.</div></div>
+        <div><div class="k">Constraints</div><div class="v"><span class="big">Replacement must be organic</span>The successor has to come from your own pipeline, launched before the cliff — no buying revenue to fake it.</div></div>
+      </div>
+      <div class="mv-lab">Moves to run</div>
+      <ol class="moves">
+        <li>Count backward: a successor needs <b>years</b> of development. Start or accelerate a program the moment you see the cliff coming.</li>
+        <li>Use <b>accelerated trial intensity</b> on the successor if the clock is tight and cash allows — you're buying time you don't have.</li>
+        <li>Launch the replacement <b>before</b> exclusivity ends so its ramp overlaps the incumbent's decline.</li>
+      </ol>
+      <div class="lesson"><div class="k">The lesson</div><div class="v">Plan the successor before the patent runs out. Lifecycle management is arithmetic done early, not heroics done late.</div></div>
+      <div class="debrief"><b>What good looks like:</b> the incumbent's revenue falls off the cliff while a new brand's ramp catches most of it — a visible baton pass in the finance chart. If you started the successor after the feed warned you, you started too late.</div>
+    </div>
+  </div>
+
+  <div class="case d2">
+    <div class="case-h"><span class="code">DIR · 07</span><div class="ttl"><h4>The Supply Bet</h4><div class="comp">Competency — supply &amp; demand planning</div></div>
+      <div class="dose"><span class="lab">Dose</span><div class="pills"><span class="pill on"></span><span class="pill on"></span><span class="pill on"></span><span class="pill on"></span><span class="pill"></span></div></div></div>
+    <div class="realworld"><b>In your real world</b>The most capital-intensive fight in the industry. In diabetes/obesity and vaccines, supply <em>is</em> the strategy — every unserved patient is a patient your competitor keeps forever.</div>
+    <div class="case-body">
+      <div class="sob">
+        <div><div class="k">Setup</div><div class="v"><span class="big">Metab or Vaccines</span>Choose a high-volume, capacity-constrained area and launch into it.</div></div>
+        <div><div class="k">Objective</div><div class="v"><span class="big">≥ 12% share</span>Reach double-digit market share while holding capacity utilisation between 80–100% for 12 straight months.</div></div>
+        <div><div class="k">Constraints</div><div class="v"><span class="big">No chronic shortfall</span>Sustained unserved demand fails the case — that's share you're donating.</div></div>
+      </div>
+      <div class="mv-lab">Moves to run</div>
+      <ol class="moves">
+        <li>Build capacity <b>ahead of the ramp</b>, not behind it — expansions take a month to arrive, and demand you miss is gone.</li>
+        <li>Track the portfolio's <b>capacity-use meter</b>. Below 80%, you've over-built; at 100% with unmet demand, you're leaking share.</li>
+        <li>Stage expansions in <b>steps</b> that keep utilisation in the band as demand climbs, rather than one giant idle plant.</li>
+      </ol>
+      <div class="lesson"><div class="k">The lesson</div><div class="v">Capacity is a bet you place before you know the demand. Under-build and the competitor keeps your patients; over-build and your cash sits idle.</div></div>
+      <div class="debrief"><b>What good looks like:</b> utilisation hugging 90% as share climbs — you're serving the market without financing empty lines. Persistent shortfall warnings in the feed mean you bet too small.</div>
+    </div>
+  </div>
+  <!-- ===== TIER III ===== -->
+  <div class="tierhead t3"><span class="badge">Tier III</span><h3>CEO</h3><span class="who">Allocate capital, carry the risk, and beat the table over a full decade.</span></div>
+
+  <div class="case d3">
+    <div class="case-h"><span class="code">CEO · 08</span><div class="ttl"><h4>The IPO Decision</h4><div class="comp">Competency — capital allocation</div></div>
+      <div class="dose"><span class="lab">Dose</span><div class="pills"><span class="pill on"></span><span class="pill on"></span><span class="pill on"></span><span class="pill on"></span><span class="pill"></span></div></div></div>
+    <div class="realworld"><b>In your real world</b>Equity looks free — it's cash with no interest and no repayment. It isn't free. You pay in upside, permanently, and you only find out the price years later.</div>
+    <div class="case-body">
+      <div class="sob">
+        <div><div class="k">Setup</div><div class="v"><span class="big">Grow past $350M EV</span>Cross the IPO threshold (month 12+), then take the company public.</div></div>
+        <div><div class="k">Objective</div><div class="v"><span class="big">$600M stake, ≥ 65% owned</span>Finish with founder stake ≥ $600M while still holding at least 65% of the company.</div></div>
+        <div><div class="k">Constraints</div><div class="v"><span class="big">Float with a purpose</span>Every share you sell must fund pipeline that returns more than the dilution costs you.</div></div>
+      </div>
+      <div class="mv-lab">Moves to run</div>
+      <ol class="moves">
+        <li>Float the <b>smallest slice</b> that funds your next wave of programs — a 20% float keeps 80%; resist the temptation to raise more "just in case".</li>
+        <li>Put the raised cash straight into <b>Phase III assets and capacity</b>, where it compounds into enterprise value the market will reprice upward.</li>
+        <li>If the stock runs ahead of fundamentals, a modest <b>buyback</b> later reclaims ownership you gave up cheaply.</li>
+      </ol>
+      <div class="lesson"><div class="k">The lesson</div><div class="v">Raise equity only when the pipeline turns the cash into more than the dilution costs you. Otherwise you're shrinking your own stake to feel funded.</div></div>
+      <div class="debrief"><b>What good looks like:</b> cash raised, EV climbs faster than shares issued, ownership stays high. If your market cap doubled but your stake barely moved, you funded someone else's return.</div>
+    </div>
+  </div>
+
+  <div class="case d3">
+    <div class="case-h"><span class="code">CEO · 09</span><div class="ttl"><h4>The Compliance Gauntlet</h4><div class="comp">Competency — risk &amp; governance</div></div>
+      <div class="dose"><span class="lab">Dose</span><div class="pills"><span class="pill on"></span><span class="pill on"></span><span class="pill on"></span><span class="pill on"></span><span class="pill"></span></div></div></div>
+    <div class="realworld"><b>In your real world</b>MLR and the promotional code. Aggressive promotion drifts you off-label; an audit turns that drift into a fine and a headline. Growth a single inspection can erase was never growth.</div>
+    <div class="case-body">
+      <div class="sob">
+        <div><div class="k">Setup</div><div class="v"><span class="big">Push promotion hard</span>Run high promotional spend across your brands — the aggressive posture that invites scrutiny.</div></div>
+        <div><div class="k">Objective</div><div class="v"><span class="big">Two clean audits</span>Survive at least two audit events with zero fines, keep compliance above 70, and still grow revenue.</div></div>
+        <div><div class="k">Constraints</div><div class="v"><span class="big">Grow inside the code</span>No pulling all promotion to hide — the point is aggressive <em>and</em> clean.</div></div>
+      </div>
+      <div class="mv-lab">Moves to run</div>
+      <ol class="moves">
+        <li>Fund the <b>compliance programme</b> before you scale promotion — posture above 70 is what turns an audit from a fine into a formality.</li>
+        <li>When an audit fires, <b>cooperate and remediate</b> rather than gambling on a minimal response with a thin posture.</li>
+        <li>Keep revenue climbing through it — a clean audit while growing is the proof; a clean audit while frozen is just caution.</li>
+      </ol>
+      <div class="lesson"><div class="k">The lesson</div><div class="v">Aggressive promotion and clean compliance aren't opposites. Fund the posture first, and the growth stops being fragile.</div></div>
+      <div class="debrief"><b>What good looks like:</b> compliance held above 70 through two inspections with no fines and revenue still rising. A fine means you outran your posture; a revenue stall means you bought safety by not competing.</div>
+    </div>
+  </div>
+
+  <div class="case d3">
+    <div class="case-h"><span class="code">CEO · 10</span><div class="ttl"><h4>Category Leader</h4><div class="comp">Competency — total command</div></div>
+      <div class="dose"><span class="lab">Dose</span><div class="pills"><span class="pill on"></span><span class="pill on"></span><span class="pill on"></span><span class="pill on"></span><span class="pill on"></span></div></div></div>
+    <div class="realworld"><b>In your real world</b>The ten-year scorecard. Not one launch, not one brand — a decade of pipeline, defence, and capital run well enough that the whole industry measures itself against you.</div>
+    <div class="case-body">
+      <div class="sob">
+        <div><div class="k">Setup</div><div class="v"><span class="big">Any start, full decade</span>Play all 120 months. Difficulty is your call — hard start earns the cleaner claim.</div></div>
+        <div><div class="k">Objective</div><div class="v"><span class="big">Grade A &amp; top 3</span>Finish with founder stake &gt; $1.5B AND ranked #1–3 on the industry leaderboard.</div></div>
+        <div><div class="k">Constraints</div><div class="v"><span class="big">Both, not either</span>Grade A outside the top three means the market grew faster than you. Top three at Grade B means you didn't keep enough.</div></div>
+      </div>
+      <div class="mv-lab">Moves to run</div>
+      <ol class="moves">
+        <li>Never let the <b>pipeline board go empty</b> — a leader always has the next launch already in development.</li>
+        <li>Defend every marketed brand's <b>four drivers</b> and its access; rivals compound share the moment you coast.</li>
+        <li>Use capital markets <b>with discipline</b> — raise to fund compounding assets, buy back when the stake is cheap, and keep ownership high.</li>
+        <li>Watch the <b>leaderboard</b> as a live scoreboard: rank is the one metric that tells you whether your good decade beat everyone else's.</li>
+      </ol>
+      <div class="lesson"><div class="k">The lesson</div><div class="v">Beating the table is the long game. It demands a live pipeline, defended brands, and disciplined capital — all three, for ten years, without a lapse.</div></div>
+      <div class="debrief"><b>What good looks like:</b> a decade with no empty pipeline months, no undefended brand, and a stake that grew without giving the company away. This is the game solved.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:26px;padding:18px;border:1px solid var(--edge);border-radius:8px;background:var(--slab2)">
+    <div class="eyebrow" style="margin-bottom:8px">Operator's scorecard</div>
+    <p style="font-size:13.5px;color:var(--foil);margin:0">Run the tiers in order — each competency compounds into the next. Clear all four Brand Manager cases before a director should trust you with a portfolio; clear the director tier before you carry a full decade of capital risk. A case is "cleared" when you hit its number without breaking its constraint. Miss, reload, and change one decision — the point isn't to win the reload, it's to find the single move that was quietly costing you the case.</p>
+  </div>
+</div></section>
+
+<footer style="border-top:1px solid var(--edge);padding:30px 0 46px">
+  <div class="wrap" style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:12px">
+    <div class="wm" style="font-family:var(--disp);font-weight:900;font-size:15px">MOLECULE<span style="color:var(--mag)">.</span></div>
+    <div class="muted" style="font-size:12px">Operator's manual &amp; challenge dossier · one click is one month · your stake is the score</div>
+  </div>
+</footer>
+</body>
+</html>
